@@ -28,6 +28,9 @@ return new class extends Migration
             // Nama komponen (disimpan sebagai snapshot teks)
             $table->string('nama_komponen');
 
+            // Keterangan komponen (disimpan sebagai snapshot teks, nullable)
+            $table->string('keterangan')->nullable();
+
             // Tipe: tunjangan (nambah) atau potongan (ngurangi)
             $table->enum('tipe', ['tunjangan', 'potongan']);
 

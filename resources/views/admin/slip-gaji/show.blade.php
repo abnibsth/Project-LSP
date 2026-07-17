@@ -34,9 +34,7 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        {{-- =====================================================
-             KOLOM KIRI: Ringkasan Gaji
-             ===================================================== --}}
+        {{-- KOLOM KIRI: Ringkasan Gaji --}}
         <div class="space-y-4">
             {{-- Card Ringkasan --}}
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
@@ -51,7 +49,7 @@
                         <dd class="font-medium">Rp {{ number_format($payslip->total_tunjangan, 0, ',', '.') }}</dd>
                     </div>
                     <div class="border-t border-gray-100 pt-3 flex justify-between font-semibold">
-                        <dt class="text-gray-700">Gaji Bruto</dt>
+                        <dt class="text-gray-700">Gaji bruto </dt>
                         <dd>Rp {{ number_format($payslip->gaji_bruto, 0, ',', '.') }}</dd>
                     </div>
 
@@ -59,14 +57,17 @@
                         <dt>- Potongan Absensi</dt>
                         <dd>Rp {{ number_format($payslip->potongan_absensi, 0, ',', '.') }}</dd>
                     </div>
-                    <div class="flex justify-between text-red-500">
-                        <dt>- Potongan Pajak</dt>
-                        <dd>Rp {{ number_format($payslip->potongan_pajak, 0, ',', '.') }}</dd>
-                    </div>
-                    <div class="flex justify-between text-red-500">
-                        <dt>- Potongan Lain</dt>
-                        <dd>Rp {{ number_format($payslip->total_potongan_lain, 0, ',', '.') }}</dd>
-                    </div>
+                    <!-- ini adalah perluangan - -->
+                    @forelse($payslip->components->where('tipe', 'potongan') as $comp)
+                        @if(!str_contains(strtolower($comp->nama_komponen), 'kehadiran') && !str_contains(strtolower($comp->nama_komponen), 'pajak'))
+                            <div class="flex justify-between text-red-500">
+                                <dt>- {{ $comp->keterangan ?: $comp->nama_komponen }}</dt>
+                                <dd>Rp {{ number_format($comp->nilai, 0, ',', '.') }}</dd>
+                            </div>
+                        @endif
+                    @empty
+                        {{-- Tidak ada potongan lain --}}
+                    @endforelse
                     <div class="border-t border-gray-100 pt-3 flex justify-between font-bold text-lg">
                         <dt class="text-gray-900">Gaji Bersih</dt>
                         <dd class="text-green-600">Rp {{ number_format($payslip->gaji_bersih, 0, ',', '.') }}</dd>

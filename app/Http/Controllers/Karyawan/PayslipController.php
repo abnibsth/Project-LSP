@@ -32,7 +32,7 @@ class PayslipController extends Controller
             ->orderByDesc('created_at')
             ->paginate(12);
 
-        return view('karyawan.payslips.index', compact('payslips'));
+        return view('karyawan.slip-gaji.index', compact('payslips'));
     }
 
     /**
@@ -49,7 +49,7 @@ class PayslipController extends Controller
 
         $payslip->load(['employee', 'payrollPeriod', 'components']);
 
-        return view('karyawan.payslips.show', compact('payslip'));
+        return view('karyawan.slip-gaji.show', compact('payslip'));
     }
 
     /**

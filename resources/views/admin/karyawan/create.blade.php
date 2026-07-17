@@ -15,10 +15,11 @@
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">NIK <span class="text-red-500">*</span></label>
-                    <input type="text" name="nik" value="{{ old('nik') }}" required placeholder="EMP-001"
+                    <label class="block text-sm font-medium text-gray-700 mb-1">NIK (16 Digit KTP) <span class="text-red-500">*</span></label>
+                    <input type="text" name="nik" value="{{ old('nik') }}" required placeholder="3171012345670001"
                         class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 {{ $errors->has('nik') ? 'border-red-400' : '' }}">
                     @error('nik')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+                    <p class="text-xs text-gray-400 mt-1">Harus diawali <strong>317</strong> (DKI Jakarta) & 16 digit angka.</p>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap <span class="text-red-500">*</span></label>

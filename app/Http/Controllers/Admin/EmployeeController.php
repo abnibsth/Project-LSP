@@ -55,7 +55,7 @@ class EmployeeController extends Controller
         // Daftar departemen unik untuk dropdown filter
         $departemen = Employee::distinct()->pluck('departemen')->sort()->values();
 
-        return view('admin.employees.index', compact('employees', 'departemen'));
+        return view('admin.karyawan.index', compact('employees', 'departemen'));
     }
 
     /**
@@ -63,7 +63,7 @@ class EmployeeController extends Controller
      */
     public function create(): View
     {
-        return view('admin.employees.create');
+        return view('admin.karyawan.create');
     }
 
     /**
@@ -73,7 +73,7 @@ class EmployeeController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'nik' => ['required', 'string', 'max:20', 'unique:employees,nik'],
+            'nik' => ['required', 'numeric', 'digits:16', 'regex:/^317/', 'unique:employees,nik'],
             'nama' => ['required', 'string', 'max:100'],
             'email' => ['required', 'email', 'unique:users,email'],
             'jabatan' => ['required', 'string', 'max:100'],
@@ -86,6 +86,8 @@ class EmployeeController extends Controller
             'no_telepon' => ['nullable', 'string', 'max:20'],
             'tanggal_masuk' => ['required', 'date'],
         ], [
+            'nik.digits' => 'NIK harus berupa 16 digit angka KTP.',
+            'nik.regex' => 'NIK harus diawali dengan angka 317 (DKI Jakarta).',
             'nik.unique' => 'NIK sudah terdaftar.',
             'email.unique' => 'Email sudah digunakan.',
         ]);
@@ -115,7 +117,7 @@ class EmployeeController extends Controller
     {
         $employee->load(['user', 'attendances' => fn ($q) => $q->latest()->limit(10), 'payslips.payrollPeriod']);
 
-        return view('admin.employees.show', compact('employee'));
+        return view('admin.karyawan.show', compact('employee'));
     }
 
     /**
@@ -123,7 +125,7 @@ class EmployeeController extends Controller
      */
     public function edit(Employee $employee): View
     {
-        return view('admin.employees.edit', compact('employee'));
+        return view('admin.karyawan.edit', compact('employee'));
     }
 
     /**
@@ -132,7 +134,7 @@ class EmployeeController extends Controller
     public function update(Request $request, Employee $employee): RedirectResponse
     {
         $validated = $request->validate([
-            'nik' => ['required', 'string', 'max:20', 'unique:employees,nik,'.$employee->id],
+            'nik' => ['required', 'numeric', 'digits:16', 'regex:/^317/', 'unique:employees,nik,'.$employee->id],
             'nama' => ['required', 'string', 'max:100'],
             'jabatan' => ['required', 'string', 'max:100'],
             'departemen' => ['required', 'string', 'max:100'],
@@ -143,6 +145,10 @@ class EmployeeController extends Controller
             'alamat' => ['nullable', 'string'],
             'no_telepon' => ['nullable', 'string', 'max:20'],
             'tanggal_masuk' => ['required', 'date'],
+        ], [
+            'nik.digits' => 'NIK harus berupa 16 digit angka KTP.',
+            'nik.regex' => 'NIK harus diawali dengan angka 317 (DKI Jakarta).',
+            'nik.unique' => 'NIK sudah terdaftar.',
         ]);
 
         $employee->update($validated);

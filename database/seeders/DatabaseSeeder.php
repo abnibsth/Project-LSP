@@ -46,14 +46,14 @@ class DatabaseSeeder extends Seeder
                     'role' => 'karyawan',
                 ],
                 'employee' => [
-                    'nik' => 'EMP-001',
+                    'nik' => '3171010101900001',
                     'nama' => 'Budi Santoso',
                     'jabatan' => 'Staff Operasional',
                     'departemen' => 'Operasional',
                     'status_kerja' => 'tetap',
                     'gaji_pokok' => 5000000,
                     'no_rekening' => '1234567890',
-                    'nama_bank' => 'BRI',
+                    'nama_bank' => 'Bank BRI (Bank Rakyat Indonesia)',
                     'alamat' => 'Jl. Merdeka No. 1, Sulawesi Tengah',
                     'no_telepon' => '081234567890',
                     'tanggal_masuk' => '2023-01-01',
@@ -68,14 +68,14 @@ class DatabaseSeeder extends Seeder
                     'role' => 'karyawan',
                 ],
                 'employee' => [
-                    'nik' => 'EMP-002',
+                    'nik' => '3171010101920002',
                     'nama' => 'Siti Rahayu',
                     'jabatan' => 'Supervisor Lapangan',
                     'departemen' => 'Produksi',
                     'status_kerja' => 'tetap',
                     'gaji_pokok' => 7500000,
                     'no_rekening' => '0987654321',
-                    'nama_bank' => 'BNI',
+                    'nama_bank' => 'Bank BNI (Bank Negara Indonesia)',
                     'alamat' => 'Jl. Nikel No. 5, Sulawesi Tengah',
                     'no_telepon' => '082345678901',
                     'tanggal_masuk' => '2022-03-15',
@@ -90,14 +90,14 @@ class DatabaseSeeder extends Seeder
                     'role' => 'karyawan',
                 ],
                 'employee' => [
-                    'nik' => 'EMP-003',
+                    'nik' => '3171010101950003',
                     'nama' => 'Ahmad Fauzi',
                     'jabatan' => 'Teknisi Mesin',
                     'departemen' => 'Teknik',
                     'status_kerja' => 'kontrak',
-                    'gaji_pokok' => 4500000,
+                    'gaji_pokok' => 5500000,
                     'no_rekening' => '1122334455',
-                    'nama_bank' => 'Mandiri',
+                    'nama_bank' => 'Bank Mandiri',
                     'alamat' => 'Jl. Pertambangan No. 10, Sulawesi Tengah',
                     'no_telepon' => '083456789012',
                     'tanggal_masuk' => '2024-06-01',
@@ -133,14 +133,6 @@ class DatabaseSeeder extends Seeder
                 'is_aktif' => true,
                 'keterangan' => 'Tunjangan uang makan per bulan',
             ],
-            [
-                'nama_komponen' => 'Tunjangan Jabatan',
-                'tipe' => 'tunjangan',
-                'jenis_nilai' => 'persentase',
-                'nilai' => 10, // 10% dari gaji pokok
-                'is_aktif' => true,
-                'keterangan' => '10% dari gaji pokok untuk posisi supervisor ke atas',
-            ],
             // Potongan — mengurangi gaji
             [
                 'nama_komponen' => 'Kasbon / Pinjaman',
@@ -160,7 +152,7 @@ class DatabaseSeeder extends Seeder
         // 4. BUAT ATURAN ABSENSI DEFAULT
         // =============================================
         AttendanceRule::create([
-            'jam_masuk' => '08:00:00',
+            'jam_masuk' => '07:30:00',
             'jam_keluar' => '17:00:00',
             'toleransi_menit' => 15,            // Toleransi 15 menit keterlambatan
             'potongan_per_alpha' => 200000,      // Rp 200.000 per hari alpha

@@ -50,7 +50,7 @@ class Employee extends Model
      */
     public function attendances(): HasMany
     {
-        return $this->hasMany(Attendance::class);
+        return $this->hasMany(Absensi::class);
     }
 
     /**

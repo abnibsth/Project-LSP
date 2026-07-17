@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Karyawan;
 
 use App\Http\Controllers\Controller;
-use App\Models\Attendance;
+use App\Models\Absensi;
 use App\Models\Payslip;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -26,7 +26,7 @@ class DashboardController extends Controller
         // Status absensi hari ini
         $absensiHariIni = null;
         if ($employee) {
-            $absensiHariIni = Attendance::where('employee_id', $employee->id)
+            $absensiHariIni = Absensi::where('employee_id', $employee->id)
                 ->whereDate('tanggal', today())
                 ->first();
         }
@@ -44,17 +44,17 @@ class DashboardController extends Controller
         // Rekap absensi bulan ini
         $rekapAbsensi = ['hadir' => 0, 'telat' => 0, 'alpha' => 0];
         if ($employee) {
-            $rekapAbsensi['hadir'] = Attendance::where('employee_id', $employee->id)
+            $rekapAbsensi['hadir'] = Absensi::where('employee_id', $employee->id)
                 ->whereMonth('tanggal', now()->month)
                 ->whereYear('tanggal', now()->year)
                 ->where('status', 'hadir')->count();
 
-            $rekapAbsensi['telat'] = Attendance::where('employee_id', $employee->id)
+            $rekapAbsensi['telat'] = Absensi::where('employee_id', $employee->id)
                 ->whereMonth('tanggal', now()->month)
                 ->whereYear('tanggal', now()->year)
                 ->where('status', 'telat')->count();
 
-            $rekapAbsensi['alpha'] = Attendance::where('employee_id', $employee->id)
+            $rekapAbsensi['alpha'] = Absensi::where('employee_id', $employee->id)
                 ->whereMonth('tanggal', now()->month)
                 ->whereYear('tanggal', now()->year)
                 ->where('status', 'alpha')->count();

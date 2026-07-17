@@ -29,16 +29,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'status',
     'menit_terlambat',
     'ip_address',
-    'latitude_checkin',
-    'longitude_checkin',
-    'latitude_checkout',
-    'longitude_checkout',
     'is_koreksi',
     'keterangan',
 ])]
-class Attendance extends Model
+class Absensi extends Model
 {
     use HasFactory;
+
+    // Tentukan secara manual nama tabel di database karena default-nya (absensis) berbeda dengan nama tabel riil (attendances)
+    protected $table = 'attendances';
 
     /**
      * Relasi: Record absensi ini MILIK satu karyawan.
@@ -66,7 +65,7 @@ class Attendance extends Model
 
     /**
      * Scope: filter absensi berdasarkan bulan dan tahun.
-     * Penggunaan: Attendance::bulan(7, 2026)->get()
+     * Penggunaan: Absensi::bulan(7, 2026)->get()
      */
     public function scopeBulan($query, int $bulan, int $tahun)
     {

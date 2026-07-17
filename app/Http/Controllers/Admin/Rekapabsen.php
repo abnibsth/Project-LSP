@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Attendance;
+use App\Models\Absensi;
 use App\Models\AttendanceRule;
 use App\Models\Employee;
 use Carbon\Carbon;
@@ -18,7 +18,7 @@ use Illuminate\View\View;
  * - Lihat rekap absensi semua karyawan (filter bulan/departemen)
  * - Koreksi data absensi karyawan yang salah/lupa check-in
  */
-class AttendanceController extends Controller
+class Rekapabsen extends Controller
 {
     /**
      * Tampilkan daftar rekap absensi semua karyawan.
@@ -26,12 +26,12 @@ class AttendanceController extends Controller
      */
     public function index(Request $request): View
     {
-        $bulan = $request->integer('bulan', now()->month);
-        $tahun = $request->integer('tahun', now()->year);
+        // Default range: tanggal 1 bulan ini s/d hari ini
+        $tanggalMulai = $request->input('tanggal_mulai', now()->startOfMonth()->toDateString());
+        $tanggalSelesai = $request->input('tanggal_selesai', now()->toDateString());
 
-        $query = Attendance::with('employee')
-            ->whereMonth('tanggal', $bulan)
-            ->whereYear('tanggal', $tahun);
+        $query = Absensi::with('employee')
+            ->whereBetween('tanggal', [$tanggalMulai, $tanggalSelesai]);
 
         // Filter berdasarkan karyawan tertentu
         if ($request->filled('employee_id')) {
@@ -48,13 +48,8 @@ class AttendanceController extends Controller
         // Data untuk dropdown filter
         $employees = Employee::aktif()->orderBy('nama')->get();
 
-        // Statistik bulan ini
-        $totalHadir = (clone $query->getQuery())->where('status', 'hadir')->count();
-        $totalTelat = (clone $query->getQuery())->where('status', 'telat')->count();
-        $totalAlpha = (clone $query->getQuery())->where('status', 'alpha')->count();
-
         return view('admin.attendances.index', compact(
-            'attendances', 'employees', 'bulan', 'tahun',
+            'attendances', 'employees', 'tanggalMulai', 'tanggalSelesai',
         ));
     }
 
@@ -62,7 +57,7 @@ class AttendanceController extends Controller
      * Tampilkan form koreksi absensi karyawan.
      * Dipakai saat karyawan lupa check-in atau ada kesalahan data.
      */
-    public function editKoreksi(Attendance $attendance): View
+    public function editKoreksi(Absensi $attendance): View
     {
         $attendance->load('employee');
 
@@ -73,7 +68,7 @@ class AttendanceController extends Controller
      * Simpan koreksi absensi yang dilakukan admin.
      * Sistem akan recalculate status dan menit terlambat berdasarkan data baru.
      */
-    public function updateKoreksi(Request $request, Attendance $attendance): RedirectResponse
+    public function updateKoreksi(Request $request, Absensi $attendance): RedirectResponse
     {
         $validated = $request->validate([
             'waktu_checkin' => ['nullable', 'date_format:H:i'],

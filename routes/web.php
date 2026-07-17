@@ -1,15 +1,15 @@
 <?php
 
-use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
+use App\Http\Controllers\Admin\Rekapabsen;
 use App\Http\Controllers\Admin\AttendanceRuleController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\PayrollController;
-use App\Http\Controllers\Admin\PayslipController as AdminPayslipController;
+use App\Http\Controllers\Admin\Slipgaji;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SalaryComponentController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Karyawan\AttendanceController as KaryawanAttendanceController;
+use App\Http\Controllers\Karyawan\AbsensiController as KaryawanAbsensiController;
 use App\Http\Controllers\Karyawan\DashboardController as KaryawanDashboardController;
 use App\Http\Controllers\Karyawan\PayslipController as KaryawanPayslipController;
 use App\Http\Controllers\Karyawan\ProfileController;
@@ -73,9 +73,9 @@ Route::prefix('admin')
         Route::put('aturan-absensi', [AttendanceRuleController::class, 'update'])->name('aturan-absensi.update');
 
         // --- Absensi Karyawan (Admin view & koreksi) ---
-        Route::get('absensi', [AdminAttendanceController::class, 'index'])->name('absensi.index');
-        Route::get('absensi/{attendance}/koreksi', [AdminAttendanceController::class, 'editKoreksi'])->name('absensi.koreksi');
-        Route::put('absensi/{attendance}/koreksi', [AdminAttendanceController::class, 'updateKoreksi'])->name('absensi.koreksi.update');
+        Route::get('absensi', [Rekapabsen::class, 'index'])->name('absensi.index');
+        Route::get('absensi/{attendance}/koreksi', [Rekapabsen::class, 'editKoreksi'])->name('absensi.koreksi');
+        Route::put('absensi/{attendance}/koreksi', [Rekapabsen::class, 'updateKoreksi'])->name('absensi.koreksi.update');
 
         // --- Proses Payroll ---
         Route::get('payroll', [PayrollController::class, 'index'])->name('payroll.index');
@@ -86,10 +86,10 @@ Route::prefix('admin')
         Route::post('payroll/{payrollPeriod}/finalisasi', [PayrollController::class, 'finalisasi'])->name('payroll.finalisasi');
 
         // --- Slip Gaji (Admin) ---
-        Route::get('slip-gaji', [AdminPayslipController::class, 'index'])->name('slip-gaji.index');
-        Route::get('slip-gaji/{payslip}', [AdminPayslipController::class, 'show'])->name('slip-gaji.show');
-        Route::get('slip-gaji/{payslip}/download', [AdminPayslipController::class, 'download'])->name('slip-gaji.download');
-        Route::post('slip-gaji/{payslip}/potongan-pajak', [AdminPayslipController::class, 'updatePotonganPajak'])->name('slip-gaji.potongan-pajak');
+        Route::get('slip-gaji', [Slipgaji::class, 'index'])->name('slip-gaji.index');
+        Route::get('slip-gaji/{payslip}', [Slipgaji::class, 'show'])->name('slip-gaji.show');
+        Route::get('slip-gaji/{payslip}/download', [Slipgaji::class, 'download'])->name('slip-gaji.download');
+        Route::post('slip-gaji/{payslip}/potongan-pajak', [Slipgaji::class, 'updatePotonganPajak'])->name('slip-gaji.potongan-pajak');
 
         // --- Laporan ---
         Route::get('laporan/payroll', [ReportController::class, 'payroll'])->name('laporan.payroll');
@@ -110,9 +110,9 @@ Route::prefix('karyawan')
         Route::get('/dashboard', [KaryawanDashboardController::class, 'index'])->name('dashboard');
 
         // --- Absensi Karyawan ---
-        Route::get('absensi', [KaryawanAttendanceController::class, 'index'])->name('absensi.index');
-        Route::post('absensi/checkin', [KaryawanAttendanceController::class, 'checkIn'])->name('absensi.checkin');
-        Route::post('absensi/checkout', [KaryawanAttendanceController::class, 'checkOut'])->name('absensi.checkout');
+        Route::get('absensi', [KaryawanAbsensiController::class, 'index'])->name('absensi.index');
+        Route::post('absensi/checkin', [KaryawanAbsensiController::class, 'checkIn'])->name('absensi.checkin');
+        Route::post('absensi/checkout', [KaryawanAbsensiController::class, 'checkOut'])->name('absensi.checkout');
 
         // --- Slip Gaji Karyawan ---
         Route::get('slip-gaji', [KaryawanPayslipController::class, 'index'])->name('slip-gaji.index');

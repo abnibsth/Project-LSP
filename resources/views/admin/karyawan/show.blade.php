@@ -158,21 +158,9 @@
                                     </td>
                                     <td class="px-6 py-2.5 font-mono text-xs text-gray-600">
                                         {{ $att->waktu_checkin?->format('H:i') ?? '-' }}
-                                        @if($att->latitude_checkin && $att->longitude_checkin)
-                                            <a href="https://www.google.com/maps?q={{ $att->latitude_checkin }},{{ $att->longitude_checkin }}"
-                                               target="_blank"
-                                               title="Lihat lokasi check-in"
-                                               class="ml-1 text-blue-500 hover:text-blue-700">📍 Map</a>
-                                        @endif
                                     </td>
                                     <td class="px-6 py-2.5 font-mono text-xs text-gray-600">
                                         {{ $att->waktu_checkout?->format('H:i') ?? '-' }}
-                                        @if($att->latitude_checkout && $att->longitude_checkout)
-                                            <a href="https://www.google.com/maps?q={{ $att->latitude_checkout }},{{ $att->longitude_checkout }}"
-                                               target="_blank"
-                                               title="Lihat lokasi check-out"
-                                               class="ml-1 text-blue-500 hover:text-blue-700">📍 Map</a>
-                                        @endif
                                     </td>
                                     <td class="px-6 py-2.5 text-right text-xs">
                                         {{ $att->menit_terlambat > 0 ? $att->menit_terlambat.' mnt' : '-' }}

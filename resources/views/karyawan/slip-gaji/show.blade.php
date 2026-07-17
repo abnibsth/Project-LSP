@@ -36,7 +36,7 @@
                 </div>
                 @foreach($payslip->components->where('tipe', 'tunjangan') as $komponen)
                     <div class="flex justify-between text-green-700">
-                        <span>+ {{ $komponen->nama_komponen }}</span>
+                        <span>+ {{ $komponen->keterangan ?: $komponen->nama_komponen }}</span>
                         <span>Rp {{ number_format($komponen->nilai, 0, ',', '.') }}</span>
                     </div>
                 @endforeach
@@ -63,7 +63,7 @@
             <div class="space-y-2 text-sm">
                 @foreach($payslip->components->where('tipe', 'potongan') as $komponen)
                     <div class="flex justify-between text-red-600">
-                        <span>- {{ $komponen->nama_komponen }}</span>
+                        <span>- {{ $komponen->keterangan ?: $komponen->nama_komponen }}</span>
                         <span>Rp {{ number_format($komponen->nilai, 0, ',', '.') }}</span>
                     </div>
                 @endforeach

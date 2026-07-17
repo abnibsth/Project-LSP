@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Attendance;
+use App\Models\Absensi;
 use App\Models\AttendanceRule;
 use App\Models\Employee;
 use App\Models\PayrollPeriod;
@@ -87,6 +87,7 @@ class PayrollService
             $totalTunjangan += $nilai;
             $rincianTunjangan[] = [
                 'nama_komponen' => $komponen->nama_komponen,
+                'keterangan' => $komponen->keterangan,
                 'tipe' => 'tunjangan',
                 'nilai' => $nilai,
             ];
@@ -100,7 +101,7 @@ class PayrollService
         // =========================================================
         // LANGKAH 3: Hitung POTONGAN ABSENSI (otomatis dari data absensi)
         // =========================================================
-        $absensiKaryawan = Attendance::where('employee_id', $karyawan->id)
+        $absensiKaryawan = Absensi::where('employee_id', $karyawan->id)
             ->whereMonth('tanggal', $periode->bulan)
             ->whereYear('tanggal', $periode->tahun)
             ->get();
@@ -132,6 +133,7 @@ class PayrollService
                 $totalPotonganLain += $nilai;
                 $rincianPotonganLain[] = [
                     'nama_komponen' => $komponen->nama_komponen,
+                    'keterangan' => $komponen->keterangan,
                     'tipe' => 'potongan',
                     'nilai' => $nilai,
                 ];

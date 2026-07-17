@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Karyawan;
 
 use App\Http\Controllers\Controller;
-use App\Models\Attendance;
+use App\Models\Absensi;
 use App\Models\AttendanceRule;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -24,7 +24,7 @@ use Illuminate\View\View;
  * - Telat  : waktu check-in > (jam_masuk + toleransi)
  * - Alpha  : tidak ada check-in hingga akhir hari
  */
-class AttendanceController extends Controller
+class AbsensiController extends Controller
 {
     /**
      * Tampilkan halaman absensi karyawan.
@@ -37,12 +37,12 @@ class AttendanceController extends Controller
         $tahun = $request->integer('tahun', now()->year);
 
         // Absensi hari ini
-        $absensiHariIni = Attendance::where('employee_id', $employee->id)
+        $absensiHariIni = Absensi::where('employee_id', $employee->id)
             ->whereDate('tanggal', today())
             ->first();
 
         // Rekap absensi bulan yang dipilih
-        $rekapAbsensi = Attendance::where('employee_id', $employee->id)
+        $rekapAbsensi = Absensi::where('employee_id', $employee->id)
             ->whereMonth('tanggal', $bulan)
             ->whereYear('tanggal', $tahun)
             ->orderBy('tanggal', 'desc')
@@ -50,7 +50,7 @@ class AttendanceController extends Controller
 
         $rule = AttendanceRule::berlaku();
 
-        return view('karyawan.attendance', compact('absensiHariIni', 'rekapAbsensi', 'rule', 'bulan', 'tahun'));
+        return view('karyawan.absesni', compact('absensiHariIni', 'rekapAbsensi', 'rule', 'bulan', 'tahun'));
     }
 
     /**
@@ -71,7 +71,7 @@ class AttendanceController extends Controller
         }
 
         // Cek apakah sudah check-in hari ini
-        $sudahCheckIn = Attendance::where('employee_id', $employee->id)
+        $sudahCheckIn = Absensi::where('employee_id', $employee->id)
             ->whereDate('tanggal', today())
             ->exists();
 
@@ -95,15 +95,13 @@ class AttendanceController extends Controller
             $menitTerlambat = (int) $jamMasuk->diffInMinutes($sekarang);
         }
 
-        Attendance::create([
+        Absensi::create([
             'employee_id' => $employee->id,
             'tanggal' => today(),
             'waktu_checkin' => $sekarang,
             'status' => $status,
             'menit_terlambat' => $menitTerlambat,
             'ip_address' => $request->ip(),
-            'latitude_checkin' => $request->input('latitude'),
-            'longitude_checkin' => $request->input('longitude'),
             'is_koreksi' => false,
         ]);
 
@@ -121,7 +119,7 @@ class AttendanceController extends Controller
     {
         $employee = Auth::user()->employee;
 
-        $absensiHariIni = Attendance::where('employee_id', $employee->id)
+        $absensiHariIni = Absensi::where('employee_id', $employee->id)
             ->whereDate('tanggal', today())
             ->first();
 
@@ -135,8 +133,6 @@ class AttendanceController extends Controller
 
         $absensiHariIni->update([
             'waktu_checkout' => now(),
-            'latitude_checkout' => $request->input('latitude'),
-            'longitude_checkout' => $request->input('longitude'),
         ]);
 
         return back()->with('success', 'Check-out berhasil! Sampai jumpa besok 👋');

@@ -66,8 +66,6 @@
                 <tr>
                     <th class="px-6 py-3 text-left">Karyawan</th>
                     <th class="px-6 py-3 text-right">Gaji Bruto</th>
-                    <th class="px-6 py-3 text-right">Potongan Absensi</th>
-                    <th class="px-6 py-3 text-right">Potongan Pajak</th>
                     <th class="px-6 py-3 text-right">Total Potongan</th>
                     <th class="px-6 py-3 text-right">Gaji Bersih</th>
                     <th class="px-6 py-3 text-center">Aksi</th>
@@ -81,20 +79,6 @@
                             <p class="text-xs text-gray-400">{{ $payslip->employee->jabatan }} — {{ $payslip->employee->departemen }}</p>
                         </td>
                         <td class="px-6 py-3 text-right">Rp {{ number_format($payslip->gaji_bruto, 0, ',', '.') }}</td>
-                        <td class="px-6 py-3 text-right text-red-600">Rp {{ number_format($payslip->potongan_absensi, 0, ',', '.') }}</td>
-                        <td class="px-6 py-3 text-right">
-                            @if(!$payrollPeriod->isFinal())
-                                {{-- Input potongan pajak manual HRD --}}
-                                <form method="POST" action="{{ route('admin.slip-gaji.potongan-pajak', $payslip) }}" class="flex items-center gap-1 justify-end">
-                                    @csrf
-                                    <input type="number" name="potongan_pajak" value="{{ $payslip->potongan_pajak }}" min="0" step="1000"
-                                        class="w-28 border border-gray-300 rounded px-2 py-1 text-xs text-right">
-                                    <button type="submit" class="text-blue-600 hover:text-blue-800 text-xs">Simpan</button>
-                                </form>
-                            @else
-                                <span class="text-red-600">Rp {{ number_format($payslip->potongan_pajak, 0, ',', '.') }}</span>
-                            @endif
-                        </td>
                         <td class="px-6 py-3 text-right text-red-600 font-medium">Rp {{ number_format($payslip->total_potongan, 0, ',', '.') }}</td>
                         <td class="px-6 py-3 text-right font-bold text-green-700">Rp {{ number_format($payslip->gaji_bersih, 0, ',', '.') }}</td>
                         <td class="px-6 py-3">

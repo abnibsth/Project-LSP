@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable([
     'payslip_id',
     'nama_komponen',
+    'keterangan',
     'tipe',
     'nilai',
 ])]

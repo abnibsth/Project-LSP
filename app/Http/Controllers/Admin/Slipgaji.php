@@ -19,7 +19,7 @@ use Illuminate\View\View;
  * - Download slip gaji sebagai PDF
  * - Update potongan pajak (input manual HRD) — FR-04 di PRD
  */
-class PayslipController extends Controller
+class Slipgaji extends Controller
 {
     /**
      * Daftar semua slip gaji (bisa difilter per periode/karyawan).
@@ -39,7 +39,7 @@ class PayslipController extends Controller
 
         $payslips = $query->orderByDesc('created_at')->paginate(20)->withQueryString();
 
-        return view('admin.payslips.index', compact('payslips'));
+        return view('admin.slip-gaji.index', compact('payslips'));
     }
 
     /**
@@ -49,7 +49,7 @@ class PayslipController extends Controller
     {
         $payslip->load(['employee', 'payrollPeriod', 'components']);
 
-        return view('admin.payslips.show', compact('payslip'));
+        return view('admin.slip-gaji.show', compact('payslip'));
     }
 
     /**

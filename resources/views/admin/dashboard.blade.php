@@ -63,6 +63,111 @@
         </div>
     </div>
 
+    {{-- Section Grafik Pengeluaran --}}
+    <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm mb-8">
+        <div class="flex items-center justify-between mb-4">
+            <div>
+                <h2 class="text-base font-semibold text-gray-900">Grafik Pengeluaran Gaji Bulanan</h2>
+                <p class="text-xs text-gray-400">Total pengeluaran gaji bersih (Take-Home Pay) dalam 6 periode terakhir</p>
+            </div>
+            <div class="px-3 py-1.5 bg-blue-50 text-blue-700 text-xs font-semibold rounded-lg flex items-center gap-1.5">
+                <span>💰</span> Rupiah (IDR)
+            </div>
+        </div>
+        <div class="relative w-full" style="height: 320px;">
+            <canvas id="chartGaji"></canvas>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const ctx = document.getElementById('chartGaji').getContext('2d');
+            
+            // Create nice gradient fill for the chart line
+            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(59, 130, 246, 0.4)'); // blue-500 with opacity
+            gradient.addColorStop(1, 'rgba(59, 130, 246, 0.0)'); // fading out
+
+            const labels = @json($labels);
+            const dataValues = @json($dataPengeluaran);
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total Pengeluaran Gaji',
+                        data: dataValues,
+                        borderColor: '#2563eb', // blue-600
+                        borderWidth: 3,
+                        backgroundColor: gradient,
+                        fill: true,
+                        tension: 0.35, // Smooth curves
+                        pointBackgroundColor: '#2563eb',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#1f2937', // gray-800
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
+                            padding: 12,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    let value = context.raw;
+                                    return ' Pengeluaran: Rp ' + new Intl.NumberFormat('id-ID').format(value);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#f3f4f6', // gray-100
+                            },
+                            ticks: {
+                                color: '#9ca3af', // gray-400
+                                font: {
+                                    size: 11
+                                },
+                                callback: function(value) {
+                                    if (value >= 1000000) {
+                                        return 'Rp ' + (value / 1000000) + ' Jt';
+                                    }
+                                    return 'Rp ' + new Intl.NumberFormat('id-ID').format(value);
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#9ca3af',
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
     {{-- Aksi Cepat --}}
     <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
         <h2 class="text-base font-semibold text-gray-900 mb-4">Aksi Cepat</h2>

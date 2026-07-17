@@ -126,7 +126,7 @@
                     </tr>
                     @foreach($payslip->components->where('tipe', 'tunjangan') as $komponen)
                         <tr class="tunjangan">
-                            <td>{{ $komponen->nama_komponen }}</td>
+                            <td>{{ $komponen->keterangan ?: $komponen->nama_komponen }}</td>
                             <td>Rp {{ number_format($komponen->nilai, 0, ',', '.') }}</td>
                         </tr>
                     @endforeach
@@ -154,7 +154,7 @@
                 <table class="gaji-table">
                     @foreach($payslip->components->where('tipe', 'potongan') as $komponen)
                         <tr class="potongan">
-                            <td>{{ $komponen->nama_komponen }}</td>
+                            <td>{{ $komponen->keterangan ?: $komponen->nama_komponen }}</td>
                             <td>Rp {{ number_format($komponen->nilai, 0, ',', '.') }}</td>
                         </tr>
                     @endforeach

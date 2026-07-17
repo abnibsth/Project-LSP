@@ -14,9 +14,7 @@
         <div>
             <h1 class="text-2xl font-bold text-gray-900">Rekap Absensi</h1>
             <p class="text-gray-500 text-sm mt-1">
-                Data kehadiran karyawan bulan
-                {{-- Format nama bulan dari angka (1-12) ke nama bulan Indonesia --}}
-                {{ \Carbon\Carbon::create()->month($bulan)->translatedFormat('F') }} {{ $tahun }}
+                Data kehadiran karyawan periode <span class="font-semibold text-gray-700">{{ \Carbon\Carbon::parse($tanggalMulai)->translatedFormat('d F Y') }}</span> s/d <span class="font-semibold text-gray-700">{{ \Carbon\Carbon::parse($tanggalSelesai)->translatedFormat('d F Y') }}</span>
             </p>
         </div>
     </div>
@@ -28,23 +26,14 @@
          ===================================================== --}}
     <form method="GET" class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm mb-4 flex flex-wrap gap-3 items-end">
         <div>
-            <label class="block text-xs font-medium text-gray-500 mb-1">Bulan</label>
-            <select name="bulan" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
-                @for($i = 1; $i <= 12; $i++)
-                    <option value="{{ $i }}" {{ $bulan == $i ? 'selected' : '' }}>
-                        {{-- Konversi angka bulan ke nama bulan --}}
-                        {{ \Carbon\Carbon::create()->month($i)->translatedFormat('F') }}
-                    </option>
-                @endfor
-            </select>
+            <label class="block text-xs font-medium text-gray-500 mb-1">Tanggal Mulai</label>
+            <input type="date" name="tanggal_mulai" value="{{ $tanggalMulai }}"
+                class="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500">
         </div>
         <div>
-            <label class="block text-xs font-medium text-gray-500 mb-1">Tahun</label>
-            <select name="tahun" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
-                @for($y = now()->year; $y >= 2020; $y--)
-                    <option value="{{ $y }}" {{ $tahun == $y ? 'selected' : '' }}>{{ $y }}</option>
-                @endfor
-            </select>
+            <label class="block text-xs font-medium text-gray-500 mb-1">Tanggal Selesai</label>
+            <input type="date" name="tanggal_selesai" value="{{ $tanggalSelesai }}"
+                class="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500">
         </div>
         <div>
             <label class="block text-xs font-medium text-gray-500 mb-1">Karyawan</label>
@@ -116,23 +105,9 @@
                         <td class="px-6 py-3 font-mono text-xs text-gray-600">
                             {{-- Optional chaining (?->): jika waktu null, tampilkan "-" --}}
                             {{ $attendance->waktu_checkin?->format('H:i') ?? '-' }}
-                            {{-- Link GPS Lokasi Check-in --}}
-                            @if($attendance->latitude_checkin && $attendance->longitude_checkin)
-                                <a href="https://www.google.com/maps?q={{ $attendance->latitude_checkin }},{{ $attendance->longitude_checkin }}"
-                                   target="_blank"
-                                   title="Lihat lokasi check-in di Google Maps"
-                                   class="ml-1 text-blue-500 hover:text-blue-700 text-xs">📍 Map</a>
-                            @endif
                         </td>
                         <td class="px-6 py-3 font-mono text-xs text-gray-600">
                             {{ $attendance->waktu_checkout?->format('H:i') ?? '-' }}
-                            {{-- Link GPS Lokasi Check-out --}}
-                            @if($attendance->latitude_checkout && $attendance->longitude_checkout)
-                                <a href="https://www.google.com/maps?q={{ $attendance->latitude_checkout }},{{ $attendance->longitude_checkout }}"
-                                   target="_blank"
-                                   title="Lihat lokasi check-out di Google Maps"
-                                   class="ml-1 text-blue-500 hover:text-blue-700 text-xs">📍 Map</a>
-                            @endif
                         </td>
                         <td class="px-6 py-3 text-right text-xs">
                             @if($attendance->menit_terlambat > 0)
