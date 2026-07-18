@@ -25,12 +25,12 @@ class SalaryComponentController extends Controller
         $tunjangan = SalaryComponent::where('tipe', 'tunjangan')->orderBy('nama_komponen')->get();
         $potongan = SalaryComponent::where('tipe', 'potongan')->orderBy('nama_komponen')->get();
 
-        return view('admin.salary-components.index', compact('tunjangan', 'potongan'));
+        return view('admin.komponen-gaji.index', compact('tunjangan', 'potongan'));
     }
 
     public function create(): View
     {
-        return view('admin.salary-components.create');
+        return view('admin.komponen-gaji.create');
     }
 
     public function store(Request $request): RedirectResponse
@@ -51,7 +51,7 @@ class SalaryComponentController extends Controller
 
     public function edit(SalaryComponent $salaryComponent): View
     {
-        return view('admin.salary-components.edit', compact('salaryComponent'));
+        return view('admin.komponen-gaji.edit', compact('salaryComponent'));
     }
 
     public function update(Request $request, SalaryComponent $salaryComponent): RedirectResponse

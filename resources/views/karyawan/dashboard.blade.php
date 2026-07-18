@@ -4,45 +4,51 @@
 
 @section('content')
     <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Dashboard Saya</h1>
-        <p class="text-gray-500 text-sm mt-1">Selamat datang, {{ auth()->user()->name }}.</p>
+        <h1 class="text-xl font-bold text-ink tracking-tight">Dashboard Saya</h1>
+        <p class="text-ink-muted-48 text-xs mt-0.5">Selamat datang kembali, {{ auth()->user()->name }}.</p>
     </div>
 
     @if(!$employee)
-        <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-lg px-4 py-3">
-            ⚠️ Data karyawan belum terhubung ke akun ini. Hubungi Admin/HRD.
+        <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-sm px-4 py-3 text-xs">
+            Data karyawan belum terhubung ke akun ini. Hubungi Admin/HRD.
         </div>
     @else
-        {{-- Status Absensi Hari Ini --}}
-        <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm mb-4">
-            <h2 class="text-base font-semibold text-gray-900 mb-4">📅 Absensi Hari Ini — {{ now()->translatedFormat('l, d F Y') }}</h2>
+        {{-- Status Absensi Hari Ini (Apple Style - flat, rounded-lg, border-hairline) --}}
+        <div class="bg-white rounded-lg border border-hairline p-6 shadow-none mb-6">
+            <h2 class="text-xs font-bold text-ink-muted-48 uppercase tracking-widest mb-4">
+                <i class="flaticon-003-calendar text-primary mr-1.5"></i> Absensi Hari Ini — {{ now()->translatedFormat('d F Y') }}
+            </h2>
 
             @if(!$absensiHariIni)
                 {{-- Belum check-in --}}
                 <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center text-3xl">⏰</div>
+                    <div class="w-10 h-10 bg-canvas-parchment border border-hairline rounded-sm flex items-center justify-center text-primary text-base">
+                        <i class="flaticon-003-calendar"></i>
+                    </div>
                     <div>
-                        <p class="font-medium text-gray-800">Belum Check-In</p>
-                        <p class="text-sm text-gray-500">Silakan lakukan check-in untuk mencatat kehadiran.</p>
+                        <p class="text-xs font-bold text-ink">Belum Check-In Kehadiran</p>
+                        <p class="text-[10px] text-ink-muted-48 mt-0.5">Silakan lakukan check-in untuk mencatat jam masuk kerja Anda hari ini.</p>
                     </div>
                     <form method="POST" action="{{ route('karyawan.absensi.checkin') }}" class="ml-auto">
                         @csrf
                         <button type="submit"
-                            class="bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-2.5 rounded-lg text-sm transition-colors">
-                            ✅ Check-In Sekarang
+                            class="bg-primary hover:bg-primary-focus text-white font-medium px-5 py-2 rounded-pill text-xs transition-all active:scale-95">
+                            Check-In Sekarang
                         </button>
                     </form>
                 </div>
             @elseif(!$absensiHariIni->waktu_checkout)
                 {{-- Sudah check-in, belum check-out --}}
                 <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center text-3xl">✅</div>
+                    <div class="w-10 h-10 bg-canvas-parchment border border-hairline rounded-sm flex items-center justify-center text-primary text-base">
+                        <i class="flaticon-005-checklist"></i>
+                    </div>
                     <div>
-                        <p class="font-medium text-gray-800">Sudah Check-In</p>
-                        <p class="text-sm text-gray-500">
-                            Pukul {{ $absensiHariIni->waktu_checkin->format('H:i') }}
+                        <p class="text-xs font-bold text-ink">Sudah Check-In Kehadiran</p>
+                        <p class="text-[10px] text-ink-muted-48 mt-0.5">
+                            Check-in masuk pukul {{ $absensiHariIni->waktu_checkin->format('H:i') }}
                             — Status:
-                            <span class="font-medium {{ $absensiHariIni->status === 'telat' ? 'text-yellow-600' : 'text-green-600' }}">
+                            <span class="font-bold {{ $absensiHariIni->status === 'telat' ? 'text-amber-600' : 'text-primary' }}">
                                 {{ ucfirst($absensiHariIni->status) }}
                                 @if($absensiHariIni->status === 'telat')
                                     ({{ $absensiHariIni->menit_terlambat }} menit)
@@ -53,18 +59,20 @@
                     <form method="POST" action="{{ route('karyawan.absensi.checkout') }}" class="ml-auto">
                         @csrf
                         <button type="submit"
-                            class="bg-orange-500 hover:bg-orange-600 text-white font-medium px-6 py-2.5 rounded-lg text-sm transition-colors">
-                            🚪 Check-Out
+                            class="bg-primary hover:bg-primary-focus text-white font-medium px-5 py-2 rounded-pill text-xs transition-all active:scale-95">
+                            Check-Out Pulang
                         </button>
                     </form>
                 </div>
             @else
                 {{-- Sudah check-out --}}
                 <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center text-3xl">🏁</div>
+                    <div class="w-10 h-10 bg-canvas-parchment border border-hairline rounded-sm flex items-center justify-center text-primary text-base">
+                        <i class="flaticon-015-home"></i>
+                    </div>
                     <div>
-                        <p class="font-medium text-gray-800">Selesai Hari Ini</p>
-                        <p class="text-sm text-gray-500">
+                        <p class="text-xs font-bold text-ink">Kehadiran Selesai Hari Ini</p>
+                        <p class="text-[10px] text-ink-muted-48 mt-0.5">
                             Masuk: {{ $absensiHariIni->waktu_checkin->format('H:i') }} —
                             Pulang: {{ $absensiHariIni->waktu_checkout->format('H:i') }}
                         </p>
@@ -73,40 +81,50 @@
             @endif
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             {{-- Ringkasan Kehadiran Bulan Ini --}}
-            <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                <h2 class="text-base font-semibold text-gray-900 mb-4">📊 Kehadiran Bulan Ini</h2>
+            <div class="bg-white rounded-lg border border-hairline p-6 shadow-none">
+                <h2 class="text-xs font-bold text-ink-muted-48 uppercase tracking-widest mb-4">
+                    <i class="flaticon-040-stats text-primary mr-1.5"></i> Kehadiran Bulan Ini
+                </h2>
                 <div class="grid grid-cols-3 gap-3">
-                    <div class="text-center p-3 bg-green-50 rounded-lg">
-                        <p class="text-2xl font-bold text-green-600">{{ $rekapAbsensi['hadir'] }}</p>
-                        <p class="text-xs text-gray-500 mt-1">Hadir</p>
+                    <div class="text-center p-3.5 bg-canvas-parchment border border-hairline rounded-lg">
+                        <p class="text-xl font-bold text-primary">{{ $rekapAbsensi['hadir'] }}</p>
+                        <p class="text-[10px] font-semibold text-ink-muted-48 mt-1 uppercase tracking-wider">Hadir</p>
                     </div>
-                    <div class="text-center p-3 bg-yellow-50 rounded-lg">
-                        <p class="text-2xl font-bold text-yellow-600">{{ $rekapAbsensi['telat'] }}</p>
-                        <p class="text-xs text-gray-500 mt-1">Telat</p>
+                    <div class="text-center p-3.5 bg-canvas-parchment border border-hairline rounded-lg">
+                        <p class="text-xl font-bold text-amber-600">{{ $rekapAbsensi['telat'] }}</p>
+                        <p class="text-[10px] font-semibold text-ink-muted-48 mt-1 uppercase tracking-wider">Telat</p>
                     </div>
-                    <div class="text-center p-3 bg-red-50 rounded-lg">
-                        <p class="text-2xl font-bold text-red-600">{{ $rekapAbsensi['alpha'] }}</p>
-                        <p class="text-xs text-gray-500 mt-1">Alpha</p>
+                    <div class="text-center p-3.5 bg-canvas-parchment border border-hairline rounded-lg">
+                        <p class="text-xl font-bold text-red-600">{{ $rekapAbsensi['alpha'] }}</p>
+                        <p class="text-[10px] font-semibold text-ink-muted-48 mt-1 uppercase tracking-wider">Alpha</p>
                     </div>
                 </div>
             </div>
 
             {{-- Gaji Terakhir --}}
-            <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                <h2 class="text-base font-semibold text-gray-900 mb-4">💰 Gaji Terakhir</h2>
+            <div class="bg-white rounded-lg border border-hairline p-6 shadow-none">
+                <h2 class="text-xs font-bold text-ink-muted-48 uppercase tracking-widest mb-4">
+                    <i class="flaticon-002-billing text-primary mr-1.5"></i> Gaji Terakhir
+                </h2>
                 @if($slipTerakhir)
-                    <div>
-                        <p class="text-3xl font-bold text-gray-900">{{ $slipTerakhir->gaji_bersih_format }}</p>
-                        <p class="text-sm text-gray-500 mt-1">{{ $slipTerakhir->payrollPeriod->label }}</p>
-                        <a href="{{ route('karyawan.slip-gaji.show', $slipTerakhir) }}"
-                            class="inline-block mt-3 text-sm text-blue-600 hover:text-blue-800 font-medium">
-                            Lihat Detail →
-                        </a>
+                    <div class="flex flex-col justify-between h-[82px]">
+                        <div>
+                            <p class="text-2xl font-bold text-ink tracking-tight">{{ $slipTerakhir->gaji_bersih_format }}</p>
+                            <p class="text-[10px] text-ink-muted-48 mt-0.5">{{ $slipTerakhir->payrollPeriod->label }}</p>
+                        </div>
+                        <div>
+                            <a href="{{ route('karyawan.slip-gaji.show', $slipTerakhir) }}"
+                                class="text-xs text-primary hover:underline font-semibold flex items-center gap-1">
+                                Lihat Detail Slip Gaji <span>→</span>
+                            </a>
+                        </div>
                     </div>
                 @else
-                    <p class="text-gray-500 text-sm">Belum ada slip gaji yang tersedia.</p>
+                    <div class="flex items-center justify-center h-[82px]">
+                        <p class="text-ink-muted-48 text-xs">Belum ada slip gaji yang tersedia.</p>
+                    </div>
                 @endif
             </div>
         </div>

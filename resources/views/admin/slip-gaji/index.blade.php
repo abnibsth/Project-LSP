@@ -70,15 +70,15 @@
                             Rp {{ number_format($payslip->gaji_bersih, 0, ',', '.') }}
                         </td>
                         <td class="px-6 py-3">
-                            <div class="flex gap-2 justify-center">
+                            <div class="flex gap-1.5 justify-center items-center">
                                 {{-- Lihat detail slip gaji --}}
                                 <a href="{{ route('admin.slip-gaji.show', $payslip) }}"
-                                    class="text-blue-600 hover:text-blue-800 text-xs font-medium">
+                                    class="px-2.5 py-1 bg-primary/10 text-primary hover:bg-primary/20 transition-all rounded-sm text-[10px] font-bold active:scale-95">
                                     Detail
                                 </a>
                                 {{-- Download sebagai PDF menggunakan barryvdh/laravel-dompdf --}}
                                 <a href="{{ route('admin.slip-gaji.download', $payslip) }}"
-                                    class="text-green-600 hover:text-green-800 text-xs font-medium">
+                                    class="px-2.5 py-1 bg-green-50 text-green-700 hover:bg-green-100 transition-all rounded-sm text-[10px] font-bold active:scale-95">
                                     PDF
                                 </a>
                             </div>

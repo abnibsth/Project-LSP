@@ -3,192 +3,273 @@
 <head>
     <meta charset="UTF-8">
     <title>Slip Gaji — {{ $payslip->employee->nama }} — {{ $payslip->payrollPeriod->label }}</title>
-    <style>
-        /* CSS untuk tampilan PDF slip gaji */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'DejaVu Sans', Arial, sans-serif; font-size: 11px; color: #333; }
-
-        .header {
-            background: #1e40af; /* Warna biru perusahaan */
-            color: white;
-            padding: 20px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-        .company-name { font-size: 18px; font-weight: bold; }
-        .slip-title { font-size: 10px; opacity: 0.8; margin-top: 2px; }
-        .periode-label {
-            text-align: right;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        .karyawan-info {
-            padding: 16px 24px;
-            background: #f8fafc;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        .karyawan-info table { width: 100%; }
-        .karyawan-info td { padding: 3px 8px; }
-        .karyawan-info td:first-child { font-weight: bold; width: 140px; color: #64748b; }
-
-        .gaji-section { padding: 16px 24px; }
-        .gaji-section h3 {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #64748b;
-            border-bottom: 1px solid #e2e8f0;
-            padding-bottom: 6px;
-            margin-bottom: 8px;
-        }
-        .gaji-table { width: 100%; border-collapse: collapse; }
-        .gaji-table td { padding: 4px 0; }
-        .gaji-table td:last-child { text-align: right; }
-        .gaji-table .total-row td {
-            padding-top: 8px;
-            border-top: 1px solid #e2e8f0;
-            font-weight: bold;
-        }
-        .tunjangan { color: #16a34a; } /* Hijau untuk tunjangan */
-        .potongan { color: #dc2626; }  /* Merah untuk potongan */
-
-        .gaji-bersih-box {
-            margin: 16px 24px;
-            background: #1e40af;
-            color: white;
-            padding: 14px 20px;
-            border-radius: 6px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .gaji-bersih-label { font-size: 12px; }
-        .gaji-bersih-nilai { font-size: 20px; font-weight: bold; }
-
-        .footer {
-            margin: 12px 24px;
-            display: flex;
-            justify-content: space-between;
-            color: #94a3b8;
-            font-size: 9px;
-        }
-        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    </style>
+    <link rel="stylesheet" href="{{ public_path('pdf.css') }}">
 </head>
 <body>
 
-    {{-- Header Slip Gaji --}}
-    <div class="header">
-        <div>
-            <div class="company-name">PT Nikel Indonesia</div>
-            <div class="slip-title">Slip Gaji Karyawan</div>
-        </div>
-        <div class="periode-label">
-            {{ strtoupper($payslip->payrollPeriod->label) }}
-        </div>
-    </div>
+    @php
+        $bulan = $payslip->payrollPeriod->bulan;
+        $tahun = $payslip->payrollPeriod->tahun;
+        
+        // Ambil data absensi karyawan pada periode ini
+        $attendances = \App\Models\Absensi::where('employee_id', $payslip->employee_id)
+            ->whereMonth('tanggal', $bulan)
+            ->whereYear('tanggal', $tahun)
+            ->orderBy('tanggal', 'asc')
+            ->get();
+            
+        // Buat daftar tanggal lengkap untuk bulan tersebut
+        $startOfMonth = \Carbon\Carbon::create($tahun, $bulan, 1)->startOfMonth();
+        $endOfMonth = $startOfMonth->copy()->endOfMonth();
+        $datesInMonth = [];
+        
+        for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay()) {
+            $datesInMonth[] = $date->copy();
+        }
+        
+        $indonesianDays = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+    @endphp
 
-    {{-- Data Karyawan --}}
-    <div class="karyawan-info">
-        <table>
+    <div class="border-container">
+        
+        {{-- Title Section --}}
+        <div class="title-section" style="border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 8px;">
+            <table style="width: 100%; border-collapse: collapse; border: none; margin: 0; padding: 0;">
+                <tr>
+                    <td style="width: 50%; text-align: left; vertical-align: middle; border: none; padding: 0;">
+                        <img src="{{ public_path('logo.png') }}" style="height: 28px; width: auto; object-fit: contain;">
+                        <div style="font-size: 8px; font-weight: bold; margin-top: 2px; color: #1e3a8a;">PT NIKEL INDONESIA</div>
+                    </td>
+                    <td style="width: 50%; text-align: right; vertical-align: middle; border: none; padding: 0;">
+                        <h1 style="font-size: 13px; font-weight: bold; margin: 0; padding: 0; letter-spacing: 0.5px;">SLIP GAJI BULANAN</h1>
+                        <p style="font-size: 8.5px; font-weight: bold; text-transform: uppercase; margin: 0; padding: 0;">({{ strtoupper($payslip->payrollPeriod->label) }})</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        {{-- Meta Section --}}
+        <table class="meta-table">
             <tr>
-                <td>Nama Karyawan</td>
-                <td>: {{ $payslip->employee->nama }}</td>
-                <td>Jabatan</td>
-                <td>: {{ $payslip->employee->jabatan }}</td>
+                <td class="label">PERUSAHAAN</td>
+                <td class="colon">:</td>
+                <td class="val">PT NIKEL INDONESIA</td>
+                <td class="label">NAMA KARYAWAN</td>
+                <td class="colon">:</td>
+                <td class="val">{{ strtoupper($payslip->employee->nama) }}</td>
             </tr>
             <tr>
-                <td>NIK</td>
-                <td>: {{ $payslip->employee->nik }}</td>
-                <td>Departemen</td>
-                <td>: {{ $payslip->employee->departemen }}</td>
+                <td class="label">NO. REKENING</td>
+                <td class="colon">:</td>
+                <td class="val">{{ strtoupper($payslip->employee->nama_bank) }} - {{ $payslip->employee->no_rekening ?? '-' }}</td>
+                <td class="label">ALAMAT</td>
+                <td class="colon">:</td>
+                <td class="val">{{ strtoupper($payslip->employee->alamat ?? '-') }}</td>
             </tr>
             <tr>
-                <td>No. Rekening</td>
-                <td>: {{ $payslip->employee->nama_bank }} — {{ $payslip->employee->no_rekening ?? '-' }}</td>
-                <td>Status</td>
-                <td>: {{ ucfirst($payslip->employee->status_kerja) }}</td>
+                <td class="label">STATUS KARYAWAN</td>
+                <td class="colon">:</td>
+                <td class="val">{{ strtoupper($payslip->employee->status_kerja) }}</td>
+                <td class="label">NIK KTP</td>
+                <td class="colon">:</td>
+                <td class="val">{{ $payslip->employee->nik }}</td>
+            </tr>
+            <tr>
+                <td class="label">JABATAN</td>
+                <td class="colon">:</td>
+                <td class="val">{{ strtoupper($payslip->employee->jabatan) }}</td>
+                <td class="label">DEPARTEMEN</td>
+                <td class="colon">:</td>
+                <td class="val">{{ strtoupper($payslip->employee->departemen) }}</td>
             </tr>
         </table>
-    </div>
 
-    {{-- Rincian Gaji dalam 2 kolom --}}
-    <div class="gaji-section">
-        <div class="two-col">
-            {{-- Kolom Kiri: Pendapatan --}}
-            <div>
-                <h3>Pendapatan</h3>
-                <table class="gaji-table">
-                    <tr>
-                        <td>Gaji Pokok</td>
-                        <td>Rp {{ number_format($payslip->gaji_pokok, 0, ',', '.') }}</td>
-                    </tr>
-                    @foreach($payslip->components->where('tipe', 'tunjangan') as $komponen)
-                        <tr class="tunjangan">
-                            <td>{{ $komponen->keterangan ?: $komponen->nama_komponen }}</td>
-                            <td>Rp {{ number_format($komponen->nilai, 0, ',', '.') }}</td>
-                        </tr>
-                    @endforeach
-                    <tr class="total-row">
-                        <td>Total Pendapatan</td>
-                        <td>Rp {{ number_format($payslip->gaji_bruto, 0, ',', '.') }}</td>
-                    </tr>
-                </table>
-
-                {{-- Info Kehadiran --}}
-                @if($payslip->detail_json)
-                    <h3 style="margin-top:12px;">Kehadiran</h3>
-                    <table class="gaji-table">
-                        <tr><td>Hari Hadir</td><td>{{ $payslip->detail_json['total_hadir'] ?? 0 }} hari</td></tr>
-                        <tr><td>Hari Telat</td><td>{{ $payslip->detail_json['total_telat'] ?? 0 }} hari</td></tr>
-                        <tr><td>Hari Alpha</td><td>{{ $payslip->detail_json['total_alpha'] ?? 0 }} hari</td></tr>
-                        <tr><td>Total Telat</td><td>{{ $payslip->detail_json['total_menit_telat'] ?? 0 }} menit</td></tr>
+        {{-- Main Layout Table --}}
+        <table class="layout-table">
+            <tr>
+                {{-- Left Column: Attendance --}}
+                <td style="width: 50%;">
+                    <table class="attendance-table">
+                        <thead>
+                            <tr>
+                                <th rowspan="2" style="width: 10%;">TGL</th>
+                                <th rowspan="2" style="width: 15%;">HARI</th>
+                                <th colspan="2">Jam Kerja</th>
+                                <th rowspan="2" style="width: 20%;">STATUS</th>
+                                <th rowspan="2" style="width: 12%;">SUM</th>
+                            </tr>
+                            <tr>
+                                <th style="width: 21%;">IN</th>
+                                <th style="width: 21%;">OUT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php $totalJam = 0; @endphp
+                            @foreach($datesInMonth as $date)
+                                @php
+                                    $dateStr = $date->toDateString();
+                                    
+                                    // Cari data absensi (safe memory compare)
+                                    $attendance = $attendances->first(function($item) use ($dateStr) {
+                                        return $item->tanggal->format('Y-m-d') === $dateStr;
+                                    });
+                                    
+                                    $in = '-';
+                                    $out = '-';
+                                    $status = '-';
+                                    $sum = 0.0;
+                                    
+                                    if ($date->isWeekend()) {
+                                        $status = 'L'; // Libur
+                                    }
+                                    
+                                    if ($attendance) {
+                                        $status = strtoupper(substr($attendance->status, 0, 1)); // H, T, A
+                                        if ($attendance->status !== 'alpha') {
+                                            $in = $attendance->waktu_checkin ? \Carbon\Carbon::parse($attendance->waktu_checkin)->format('H:i') : '-';
+                                            $out = $attendance->waktu_checkout ? \Carbon\Carbon::parse($attendance->waktu_checkout)->format('H:i') : '-';
+                                            
+                                            if ($attendance->waktu_checkin && $attendance->waktu_checkout) {
+                                                $checkin = \Carbon\Carbon::parse($attendance->waktu_checkin);
+                                                $checkout = \Carbon\Carbon::parse($attendance->waktu_checkout);
+                                                $diff = $checkin->diffInMinutes($checkout);
+                                                
+                                                // Jam kerja dikurangi 1 jam istirahat
+                                                $hours = max(0, ($diff - 60) / 60);
+                                                $sum = round($hours, 1);
+                                                $totalJam += $sum;
+                                            }
+                                        } else {
+                                            $status = 'A'; // Alpha
+                                        }
+                                    } else {
+                                        if (!$date->isWeekend()) {
+                                            $status = 'A'; // Weekday tapi tidak absen
+                                        }
+                                    }
+                                    
+                                    $statusMap = [
+                                        'H' => 'HADIR',
+                                        'T' => 'TELAT',
+                                        'A' => 'ALPA',
+                                        'L' => 'LIBUR'
+                                    ];
+                                    $displayStatus = $statusMap[$status] ?? $status;
+                                    $dayName = $indonesianDays[$date->dayOfWeek];
+                                @endphp
+                                <tr class="{{ $date->isWeekend() ? 'weekend-row' : '' }} {{ $status === 'A' ? 'alpha-row' : '' }}">
+                                    <td>{{ $date->format('d') }}</td>
+                                    <td>{{ $dayName }}</td>
+                                    <td>{{ $in }}</td>
+                                    <td>{{ $out }}</td>
+                                    <td style="font-weight: bold;">{{ $displayStatus }}</td>
+                                    <td>{{ $sum > 0 ? number_format($sum, 1) : '-' }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
                     </table>
-                @endif
-            </div>
+                </td>
 
-            {{-- Kolom Kanan: Potongan --}}
-            <div>
-                <h3>Potongan</h3>
-                <table class="gaji-table">
-                    @foreach($payslip->components->where('tipe', 'potongan') as $komponen)
-                        <tr class="potongan">
-                            <td>{{ $komponen->keterangan ?: $komponen->nama_komponen }}</td>
-                            <td>Rp {{ number_format($komponen->nilai, 0, ',', '.') }}</td>
+                {{-- Right Column: Salary Details --}}
+                <td style="width: 50%;" class="salary-column">
+                    <div class="salary-group-title">1. BASIS SLIP GAJI</div>
+                    <table class="salary-table">
+                        <tr>
+                            <td>Gaji Pokok (Basic Salary)</td>
+                            <td class="amount">Rp {{ number_format($payslip->gaji_pokok, 0, ',', '.') }}</td>
                         </tr>
-                    @endforeach
-                    @if($payslip->potongan_pajak > 0)
-                        <tr class="potongan">
-                            <td>Potongan Pajak (PPh 21)</td>
-                            <td>Rp {{ number_format($payslip->potongan_pajak, 0, ',', '.') }}</td>
+                        @foreach($payslip->components->where('tipe', 'tunjangan') as $komponen)
+                            <tr>
+                                <td>{{ $komponen->keterangan ?: $komponen->nama_komponen }}</td>
+                                <td class="amount">Rp {{ number_format($komponen->nilai, 0, ',', '.') }}</td>
+                            </tr>
+                        @endforeach
+                    </table>
+
+                    <div class="salary-group-title">2. HITUNGAN UPAH BRUTO (IDR)</div>
+                    <table class="salary-table">
+                        <tr>
+                            <td>Gaji Pokok</td>
+                            <td class="amount">Rp {{ number_format($payslip->gaji_pokok, 0, ',', '.') }}</td>
                         </tr>
-                    @endif
-                    @if($payslip->potongan_absensi > 0)
-                        <tr class="potongan">
-                            <td>Potongan Kehadiran</td>
-                            <td>Rp {{ number_format($payslip->potongan_absensi, 0, ',', '.') }}</td>
+                        @foreach($payslip->components->where('tipe', 'tunjangan') as $komponen)
+                            <tr>
+                                <td>{{ $komponen->keterangan ?: $komponen->nama_komponen }}</td>
+                                <td class="amount">Rp {{ number_format($komponen->nilai, 0, ',', '.') }}</td>
+                            </tr>
+                        @endforeach
+                        <tr class="total-row">
+                            <td>Total Pembayaran Bruto</td>
+                            <td class="amount">Rp {{ number_format($payslip->gaji_bruto, 0, ',', '.') }}</td>
                         </tr>
-                    @endif
-                    <tr class="total-row potongan">
-                        <td>Total Potongan</td>
-                        <td>Rp {{ number_format($payslip->total_potongan, 0, ',', '.') }}</td>
-                    </tr>
-                </table>
-            </div>
+                    </table>
+
+                    <div class="salary-group-title">3. HITUNGAN PAJAK - POTONGAN (Rp)</div>
+                    <table class="salary-table">
+                        @if($payslip->potongan_absensi > 0)
+                            <tr>
+                                <td>Potongan Kehadiran / Absensi</td>
+                                <td class="amount">Rp {{ number_format($payslip->potongan_absensi, 0, ',', '.') }}</td>
+                            </tr>
+                        @endif
+                        @if($payslip->potongan_pajak > 0)
+                            <tr>
+                                <td>Potongan Pajak (PPh 21)</td>
+                                <td class="amount">Rp {{ number_format($payslip->potongan_pajak, 0, ',', '.') }}</td>
+                            </tr>
+                        @endif
+                        @foreach($payslip->components->where('tipe', 'potongan') as $komponen)
+                            <tr>
+                                <td>{{ $komponen->keterangan ?: $komponen->nama_komponen }}</td>
+                                <td class="amount">Rp {{ number_format($komponen->nilai, 0, ',', '.') }}</td>
+                            </tr>
+                        @endforeach
+                        <tr class="total-row">
+                            <td>Total Potongan</td>
+                            <td class="amount" style="color: #ef4444;">Rp {{ number_format($payslip->total_potongan, 0, ',', '.') }}</td>
+                        </tr>
+                    </table>
+
+                    <div class="salary-group-title">4. HITUNGAN SUMMARY (Rp)</div>
+                    <div class="summary-box">
+                        <div class="summary-row">
+                            <div class="summary-label">Total Pendapatan Bruto (A)</div>
+                            <div class="summary-value">Rp {{ number_format($payslip->gaji_bruto, 0, ',', '.') }}</div>
+                        </div>
+                        <div class="summary-row">
+                            <div class="summary-label">Total Potongan & Pajak (B)</div>
+                            <div class="summary-value">Rp {{ number_format($payslip->total_potongan, 0, ',', '.') }}</div>
+                        </div>
+                        <div class="summary-row" style="font-weight: bold; border-top: 1px solid #000; padding-top: 3px; margin-top: 3px; font-size: 8px;">
+                            <div class="summary-label">THP - Gaji Bersih (A - B)</div>
+                            <div class="summary-value" style="color: #16a34a;">Rp {{ number_format($payslip->gaji_bersih, 0, ',', '.') }}</div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        {{-- Notes section --}}
+        <div class="notes">
+            <strong>Catatan:</strong> Perusahaan hanya melayani klarifikasi waktu kerja satu hari setelah penerimaan / penandatanganan slip gaji. Dokumen ini sah dan diterbitkan secara elektronik oleh Sistem Penggajian PT Nikel Indonesia.
         </div>
-    </div>
 
-    {{-- Gaji Bersih (Take-Home Pay) --}}
-    <div class="gaji-bersih-box">
-        <div class="gaji-bersih-label">💰 Gaji Bersih (Take-Home Pay)</div>
-        <div class="gaji-bersih-nilai">Rp {{ number_format($payslip->gaji_bersih, 0, ',', '.') }}</div>
-    </div>
+        {{-- Signatures --}}
+        <table class="signature-table">
+            <tr>
+                <td>Diterima oleh,</td>
+                <td>Hormat Kami,</td>
+            </tr>
+            <tr>
+                <td class="space"></td>
+                <td class="space"></td>
+            </tr>
+            <tr>
+                <td style="text-decoration: underline; font-weight: bold;">{{ strtoupper($payslip->employee->nama) }}</td>
+                <td style="text-decoration: underline; font-weight: bold;">ADMIN HRD</td>
+            </tr>
+        </table>
 
-    {{-- Footer --}}
-    <div class="footer">
-        <div>Dokumen ini dibuat secara otomatis oleh Sistem Penggajian PT Nikel Indonesia</div>
-        <div>Dicetak: {{ now()->translatedFormat('d F Y H:i') }}</div>
     </div>
 
 </body>

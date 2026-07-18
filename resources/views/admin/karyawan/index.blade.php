@@ -76,23 +76,31 @@
                             </span>
                         </td>
                         <td class="px-6 py-3">
-                            <div class="flex gap-2 justify-center">
+                            <div class="flex gap-1.5 justify-center items-center">
                                 <a href="{{ route('admin.karyawan.show', $employee) }}"
-                                    class="text-blue-600 hover:text-blue-800 text-xs font-medium">Detail</a>
+                                    class="px-2.5 py-1 bg-primary/10 text-primary hover:bg-primary/20 transition-all rounded-sm text-[10px] font-bold active:scale-95">
+                                    Detail
+                                </a>
                                 <a href="{{ route('admin.karyawan.edit', $employee) }}"
-                                    class="text-gray-600 hover:text-gray-800 text-xs font-medium">Edit</a>
+                                    class="px-2.5 py-1 bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all rounded-sm text-[10px] font-bold active:scale-95">
+                                    Edit
+                                </a>
                                 @if($employee->is_aktif)
                                     <form method="POST" action="{{ route('admin.karyawan.nonaktifkan', $employee) }}"
-                                        onsubmit="return confirm('Nonaktifkan {{ $employee->nama }}?')">
+                                        onsubmit="return confirm('Nonaktifkan {{ $employee->nama }}?')" class="m-0 p-0 flex">
                                         @csrf
-                                        <button type="submit" class="text-red-500 hover:text-red-700 text-xs font-medium">Nonaktifkan</button>
+                                        <button type="submit" class="px-2.5 py-1 bg-red-50 text-red-600 hover:bg-red-100 transition-all rounded-sm text-[10px] font-bold active:scale-95 cursor-pointer">
+                                            Nonaktifkan
+                                        </button>
                                     </form>
                                 @else
                                     <form method="POST" action="{{ route('admin.karyawan.destroy', $employee) }}"
-                                        onsubmit="return confirm('Aktifkan kembali {{ $employee->nama }}?')">
+                                        onsubmit="return confirm('Aktifkan kembali {{ $employee->nama }}?')" class="m-0 p-0 flex">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-green-600 hover:text-green-800 text-xs font-medium">Aktifkan</button>
+                                        <button type="submit" class="px-2.5 py-1 bg-green-50 text-green-700 hover:bg-green-100 transition-all rounded-sm text-[10px] font-bold active:scale-95 cursor-pointer">
+                                            Aktifkan
+                                        </button>
                                     </form>
                                 @endif
                             </div>

@@ -48,7 +48,7 @@ class Rekapabsen extends Controller
         // Data untuk dropdown filter
         $employees = Employee::aktif()->orderBy('nama')->get();
 
-        return view('admin.attendances.index', compact(
+        return view('admin.rekap-absen.index', compact(
             'attendances', 'employees', 'tanggalMulai', 'tanggalSelesai',
         ));
     }
@@ -61,7 +61,7 @@ class Rekapabsen extends Controller
     {
         $attendance->load('employee');
 
-        return view('admin.attendances.koreksi', compact('attendance'));
+        return view('admin.rekap-absen.koreksi', compact('attendance'));
     }
 
     /**

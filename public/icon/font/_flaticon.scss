@@ -1,0 +1,127 @@
+@font-face {
+  font-family: "Flaticon";
+  src: url("./Flaticon.eot");
+  src: url("./Flaticon.eot?#iefix") format("embedded-opentype"),
+       url("./Flaticon.woff2") format("woff2"),
+       url("./Flaticon.woff") format("woff"),
+       url("./Flaticon.ttf") format("truetype"),
+       url("./Flaticon.svg#Flaticon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "Flaticon";
+    src: url("./Flaticon.svg#Flaticon") format("svg");
+  }
+}
+
+.fimanager:before {
+    display: inline-block;
+  font-family: "Flaticon";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-decoration: inherit;
+  text-rendering: optimizeLegibility;
+  text-transform: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+}
+
+.flaticon-001-admin:before { content: "\f100"; }
+.flaticon-002-billing:before { content: "\f101"; }
+.flaticon-003-calendar:before { content: "\f102"; }
+.flaticon-004-charts:before { content: "\f103"; }
+.flaticon-005-checklist:before { content: "\f104"; }
+.flaticon-006-configuration:before { content: "\f105"; }
+.flaticon-007-contact:before { content: "\f106"; }
+.flaticon-008-create-account:before { content: "\f107"; }
+.flaticon-009-dashboard:before { content: "\f108"; }
+.flaticon-010-delete:before { content: "\f109"; }
+.flaticon-011-edit:before { content: "\f10a"; }
+.flaticon-012-file-explorer:before { content: "\f10b"; }
+.flaticon-013-files:before { content: "\f10c"; }
+.flaticon-014-gallery:before { content: "\f10d"; }
+.flaticon-015-home:before { content: "\f10e"; }
+.flaticon-016-income-chart:before { content: "\f10f"; }
+.flaticon-017-invoices:before { content: "\f110"; }
+.flaticon-018-layouts:before { content: "\f111"; }
+.flaticon-019-login:before { content: "\f112"; }
+.flaticon-020-logout:before { content: "\f113"; }
+.flaticon-021-mail:before { content: "\f114"; }
+.flaticon-022-manage:before { content: "\f115"; }
+.flaticon-023-manage:before { content: "\f116"; }
+.flaticon-024-maps:before { content: "\f117"; }
+.flaticon-025-members:before { content: "\f118"; }
+.flaticon-026-message:before { content: "\f119"; }
+.flaticon-027-news:before { content: "\f11a"; }
+.flaticon-028-orders:before { content: "\f11b"; }
+.flaticon-029-overview:before { content: "\f11c"; }
+.flaticon-030-profile:before { content: "\f11d"; }
+.flaticon-031-referrals:before { content: "\f11e"; }
+.flaticon-032-refresh-page:before { content: "\f11f"; }
+.flaticon-033-reports:before { content: "\f120"; }
+.flaticon-034-sales:before { content: "\f121"; }
+.flaticon-035-save:before { content: "\f122"; }
+.flaticon-036-search-user:before { content: "\f123"; }
+.flaticon-037-send-message:before { content: "\f124"; }
+.flaticon-038-setting:before { content: "\f125"; }
+.flaticon-039-setting:before { content: "\f126"; }
+.flaticon-040-stats:before { content: "\f127"; }
+.flaticon-041-stats:before { content: "\f128"; }
+.flaticon-042-support:before { content: "\f129"; }
+.flaticon-043-tasks:before { content: "\f12a"; }
+.flaticon-044-tracking:before { content: "\f12b"; }
+.flaticon-045-user-group:before { content: "\f12c"; }
+.flaticon-046-user:before { content: "\f12d"; }
+
+$font-Flaticon-001-admin: "\f100";
+$font-Flaticon-002-billing: "\f101";
+$font-Flaticon-003-calendar: "\f102";
+$font-Flaticon-004-charts: "\f103";
+$font-Flaticon-005-checklist: "\f104";
+$font-Flaticon-006-configuration: "\f105";
+$font-Flaticon-007-contact: "\f106";
+$font-Flaticon-008-create-account: "\f107";
+$font-Flaticon-009-dashboard: "\f108";
+$font-Flaticon-010-delete: "\f109";
+$font-Flaticon-011-edit: "\f10a";
+$font-Flaticon-012-file-explorer: "\f10b";
+$font-Flaticon-013-files: "\f10c";
+$font-Flaticon-014-gallery: "\f10d";
+$font-Flaticon-015-home: "\f10e";
+$font-Flaticon-016-income-chart: "\f10f";
+$font-Flaticon-017-invoices: "\f110";
+$font-Flaticon-018-layouts: "\f111";
+$font-Flaticon-019-login: "\f112";
+$font-Flaticon-020-logout: "\f113";
+$font-Flaticon-021-mail: "\f114";
+$font-Flaticon-022-manage: "\f115";
+$font-Flaticon-023-manage: "\f116";
+$font-Flaticon-024-maps: "\f117";
+$font-Flaticon-025-members: "\f118";
+$font-Flaticon-026-message: "\f119";
+$font-Flaticon-027-news: "\f11a";
+$font-Flaticon-028-orders: "\f11b";
+$font-Flaticon-029-overview: "\f11c";
+$font-Flaticon-030-profile: "\f11d";
+$font-Flaticon-031-referrals: "\f11e";
+$font-Flaticon-032-refresh-page: "\f11f";
+$font-Flaticon-033-reports: "\f120";
+$font-Flaticon-034-sales: "\f121";
+$font-Flaticon-035-save: "\f122";
+$font-Flaticon-036-search-user: "\f123";
+$font-Flaticon-037-send-message: "\f124";
+$font-Flaticon-038-setting: "\f125";
+$font-Flaticon-039-setting: "\f126";
+$font-Flaticon-040-stats: "\f127";
+$font-Flaticon-041-stats: "\f128";
+$font-Flaticon-042-support: "\f129";
+$font-Flaticon-043-tasks: "\f12a";
+$font-Flaticon-044-tracking: "\f12b";
+$font-Flaticon-045-user-group: "\f12c";
+$font-Flaticon-046-user: "\f12d";

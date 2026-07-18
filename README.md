@@ -1,58 +1,142 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistem Penggajian (Payroll) PT Nikel Indonesia
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem Penggajian PT Nikel Indonesia adalah sebuah aplikasi berbasis web (Project LSP) yang dirancang untuk mendigitalisasi dan mengotomatisasi seluruh proses manajemen karyawan, pencatatan kehadiran, hingga perhitungan dan distribusi slip gaji bulanan (payroll) secara aman, akurat, dan transparan.
 
-## About Laravel
+Aplikasi ini memiliki 2 hak akses (Role): **Admin HRD** dan **Karyawan**.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 Fitur Utama
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1. Panel Admin HRD
+*   **Dashboard Utama**: Menampilkan ringkasan data real-time (Total Karyawan Aktif, Jumlah Karyawan Hadir & Alpha Hari Ini, Periode Payroll Aktif) beserta **Grafik Pengeluaran Gaji Bulanan** yang interaktif menggunakan Chart.js.
+*   **Manajemen Karyawan**: Mengelola data profil karyawan. Input NIK divalidasi ketat menggunakan format KTP DKI Jakarta (16 digit angka diawali kode `317`).
+*   **Komponen Gaji**: Mendefinisikan tunjangan (penambah gaji) dan potongan (pengurang gaji) yang berlaku secara dinamis, lengkap dengan kolom **Keterangan** penjelasan komponen.
+*   **Aturan Absensi**: Pengaturan parameter absensi kantor (Jam Masuk, Jam Keluar, Toleransi Keterlambatan dalam menit, Potongan per hari Alpha, dan Potongan per menit terlambat).
+*   **Rekap Absensi (Date Range Filter)**: Melihat logs kehadiran seluruh karyawan dengan filter **Rentang Tanggal** (Tanggal Mulai s/d Tanggal Selesai), filter Nama Karyawan, dan filter Status Kehadiran. Admin juga dapat melakukan koreksi/koreksi absensi jika karyawan lupa melakukan check-in/out.
+*   **Proses Payroll Bulanan**: Memproses perhitungan gaji bulanan seluruh karyawan secara massal berdasarkan data kehadiran kerja nyata dalam periode tersebut.
+*   **Manajemen Slip Gaji**: Melihat rincian komponen gaji bersih per karyawan dan mencetaknya ke format PDF resmi.
+*   **Laporan Lanjutan**: Menyediakan menu khusus Laporan Payroll dan Laporan Absensi yang dapat diekspor.
 
-## Learning Laravel
+### 2. Panel Karyawan
+*   **Dashboard Karyawan**: Ringkasan data absensi pribadi bulan berjalan.
+*   **Absensi Elektronik**: Melakukan Check-In di pagi hari dan Check-Out di sore hari secara mandiri. Sistem otomatis mendeteksi status kehadiran (*Hadir* atau *Terlambat* berdasarkan aturan kantor) beserta pencatatan IP Address.
+*   **Riwayat Kehadiran**: Rekapitulasi kehadiran pribadi karyawan per tanggal.
+*   **Slip Gaji Saya**: Melihat rincian slip gaji bulanan dan mendownload slip resmi format PDF jika periode payroll sudah difinalisasi oleh Admin.
+*   **Profil Saya**: Memperbarui informasi rekening bank pribadi (Nama Bank, Nomor Rekening, Alamat, No Telepon) secara mandiri.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛠️ Tech Stack & Dependencies
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+*   **Framework**: Laravel v10 / v11 (PHP 8.3)
+*   **Database**: MySQL / MariaDB
+*   **Styling**: Tailwind CSS & CSS Grid Layout
+*   **Engine PDF**: Barryvdh/Laravel-Dompdf
+*   **Visualisasi Data**: Chart.js (Interactive Line Chart dengan Gradient Fill)
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## 🔄 Alur & Flow Sistem (Sistem Penggajian)
 
-```bash
-composer require laravel/boost --dev
+Berikut adalah diagram alir proses operasional sistem dari input data hingga terbitnya slip gaji:
 
-php artisan boost:install
+```
+[Mulai]
+   │
+   ▼
+[1. Admin HRD Login]
+   │
+   ├─► [Atur Aturan Absensi] (Jam kerja & tarif denda terlambat/alpha)
+   ├─► [Atur Komponen Gaji] (Tunjangan Makan, Transport, BPJS, PPh21, dll)
+   └─► [Input Data Karyawan] (NIK divalidasi 16-digit berawalan 317)
+   │
+   ▼
+[2. Operasional Karyawan (Setiap Hari)]
+   │
+   ├─► Karyawan Login -> Masuk ke Menu Absensi
+   └─► Klik [Check-In] (Pagi) & [Check-Out] (Sore)
+         ├── Status 'Hadir': Jika check-in <= jam masuk + toleransi menit
+         └── Status 'Telat': Jika check-in > batas toleransi (dihitung menit terlambatnya)
+   │
+   ▼
+[3. Akhir Bulan / Periode Payroll]
+   │
+   ├─► Admin masuk ke menu [Proses Payroll] -> Klik [Buat Periode Payroll] (Status: Draft)
+   ├─► Klik [Proses Payroll]
+   │     │
+   │     ▼ (Sistem Menghitung Otomatis per Karyawan)
+   │     • Gaji Pokok (diambil dari profil Karyawan)
+   │     • Tunjangan Aktif (Transport, Makan, dll)
+   │     • Potongan Kehadiran:
+   │         - Hari Alpha × Potongan per Alpha
+   │         - Menit Telat × Potongan per Menit Telat
+   │     • Potongan Pajak (PPh 21) & Potongan Lainnya
+   │     • Gaji Bersih (THP) = Gaji Pokok + Tunjangan - Potongan - Pajak
+   │
+   ├─► Admin memeriksa rincian slip gaji seluruh karyawan (Status: Draft)
+   └─► Admin Klik [Finalisasi Periode] (Status berubah menjadi: Final)
+   │
+   ▼
+[4. Distribusi Slip Gaji]
+   │
+   ├─► Karyawan Login -> Masuk ke Menu [Slip Gaji]
+   └─► Klik [Download PDF]
+         └── Terbit PDF Slip Gaji Resmi satu halaman A4 yang berisi:
+               - Sisi Kiri: Log kehadiran real detail per tanggal (IN, OUT, Status, Sum Jam Kerja)
+               - Sisi Kanan: Basis Gaji, Upah Bruto, Potongan Pajak & Absen, serta Gaji Bersih (THP)
+   │
+   ▼
+[Selesai]
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+## 💻 Panduan Instalasi & Pengujian Lokal
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1.  **Clone / Download Project**:
+    Pastikan folder project diletakkan di direktori web server (misal: `laragon/www/PT-Nikel-Indonesia`).
 
-## Code of Conduct
+2.  **Konfigurasi Environment (`.env`)**:
+    Buat file `.env` dan sesuaikan koneksi database MySQL Anda:
+    ```env
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=pt_nikel_payroll
+    DB_USERNAME=root
+    DB_PASSWORD=
+    ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+3.  **Install Dependencies & Migrasi Database**:
+    Jalankan perintah berikut di terminal:
+    ```bash
+    composer install
+    npm install
+    npm run build
+    php artisan key:generate
+    php artisan migrate:fresh --seed
+    ```
 
-## Security Vulnerabilities
+4.  **Akun Login Default (Seeder)**:
+    Gunakan akun-akun berikut untuk menguji sistem:
+    *   **Admin HRD**:
+        *   Email: `admin@ptnikel.com`
+        *   Password: `password`
+    *   **Karyawan (Budi Santoso)**:
+        *   Email: `budi@ptnikel.com`
+        *   Password: `password`
+    *   **Karyawan (Siti Rahayu)**:
+        *   Email: `siti@ptnikel.com`
+        *   Password: `password`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 📈 Database Schema Relations (Core)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+*   `users`: Menyimpan kredensial akun login (`email`, `password`, `role`).
+*   `employees`: Menyimpan data induk kepegawaian (`nik`, `nama`, `jabatan`, `gaji_pokok`, `rekening`, `is_aktif`). Berelasi One-to-One dengan `users`.
+*   `attendances` (Model: `Absensi`): Pencatatan logs kehadiran harian (`tanggal`, `waktu_checkin`, `waktu_checkout`, `status`, `menit_terlambat`). Berelasi Many-to-One dengan `employees`.
+*   `payroll_periods`: Menyimpan master data bulan & tahun periode penggajian (`bulan`, `tahun`, `status`).
+*   `payslips`: Ringkasan gaji bersih per karyawan pada periode tertentu (`gaji_pokok`, `gaji_bruto`, `total_potongan`, `potongan_absensi`, `potongan_pajak`, `gaji_bersih`, `detail_json`). Berelasi Many-to-One dengan `payroll_periods` & `employees`.
+*   `payslip_components`: Menyimpan snapshot rincian tunjangan/potongan yang diterima karyawan pada slip gaji (`nama_komponen`, `tipe`, `nilai`, `keterangan`). Berelasi Many-to-One dengan `payslips`.

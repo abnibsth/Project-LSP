@@ -49,22 +49,24 @@
                             @endif
                         </td>
                         <td class="px-6 py-4">
-                            <div class="flex gap-2 justify-center">
+                            <div class="flex gap-1.5 justify-center items-center">
                                 <a href="{{ route('admin.payroll.show', $periode) }}"
-                                    class="text-blue-600 hover:text-blue-800 text-xs font-medium">Detail</a>
+                                    class="px-2.5 py-1 bg-primary/10 text-primary hover:bg-primary/20 transition-all rounded-sm text-[10px] font-bold active:scale-95">
+                                    Detail
+                                </a>
                                 @if(!$periode->isFinal())
                                     <form method="POST" action="{{ route('admin.payroll.proses', $periode) }}"
-                                        onsubmit="return confirm('Proses payroll untuk {{ $periode->label }}?')">
+                                        onsubmit="return confirm('Proses payroll untuk {{ $periode->label }}?')" class="m-0 p-0 flex">
                                         @csrf
-                                        <button type="submit" class="text-purple-600 hover:text-purple-800 text-xs font-medium">
+                                        <button type="submit" class="px-2.5 py-1 bg-purple-50 text-purple-700 hover:bg-purple-100 transition-all rounded-sm text-[10px] font-bold active:scale-95 cursor-pointer">
                                             Proses
                                         </button>
                                     </form>
                                     @if($periode->payslips->count() > 0)
                                         <form method="POST" action="{{ route('admin.payroll.finalisasi', $periode) }}"
-                                            onsubmit="return confirm('Finalisasi payroll {{ $periode->label }}? Data akan dikunci!')">
+                                            onsubmit="return confirm('Finalisasi payroll {{ $periode->label }}? Data akan dikunci!')" class="m-0 p-0 flex">
                                             @csrf
-                                            <button type="submit" class="text-green-600 hover:text-green-800 text-xs font-medium">
+                                            <button type="submit" class="px-2.5 py-1 bg-green-50 text-green-700 hover:bg-green-100 transition-all rounded-sm text-[10px] font-bold active:scale-95 cursor-pointer">
                                                 Finalisasi
                                             </button>
                                         </form>

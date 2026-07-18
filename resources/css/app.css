@@ -4,6 +4,105 @@
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --color-primary: #0066cc;
+    --color-primary-focus: #0071e3;
+    --color-primary-on-dark: #2997ff;
+    --color-ink: #1d1d1f;
+    --color-body-muted: #cccccc;
+    --color-ink-muted-80: #333333;
+    --color-ink-muted-48: #7a7a7a;
+    --color-divider-soft: #f0f0f0;
+    --color-hairline: #e0e0e0;
+    --color-canvas-parchment: #f5f5f7;
+    --color-surface-pearl: #fafafc;
+    --color-surface-tile-1: #272729;
+    --color-surface-tile-2: #2a2a2c;
+    --color-surface-tile-3: #252527;
+    --color-surface-black: #000000;
+    --color-surface-chip-translucent: rgba(210, 210, 215, 0.64);
+
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+
+    --radius-xs: 5px;
+    --radius-sm: 8px;
+    --radius-md: 11px;
+    --radius-lg: 18px;
+    --radius-pill: 9999px;
+}
+
+/* Custom Typography Utilities dari DESIGN.md */
+.typography-hero-display {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 56px;
+    font-weight: 600;
+    line-height: 1.07;
+    letter-spacing: -0.28px;
+}
+.typography-display-lg {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 1.10;
+    letter-spacing: -0.3px;
+}
+.typography-display-md {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 34px;
+    font-weight: 600;
+    line-height: 1.47;
+    letter-spacing: -0.374px;
+}
+.typography-lead {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.14;
+    letter-spacing: 0.196px;
+}
+.typography-tagline {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 1.19;
+    letter-spacing: 0.231px;
+}
+.typography-body-strong {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.24;
+    letter-spacing: -0.374px;
+}
+.typography-body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.47;
+    letter-spacing: -0.374px;
+}
+
+/* Helper selector untuk Flaticon WebFont */
+[class^="flaticon-"]:before, [class*=" flaticon-"]:before {
+    font-family: "Flaticon" !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-variant: normal !important;
+    text-transform: none !important;
+    line-height: 1 !important;
+    display: inline-block;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Responsivitas & Kerapian Desain Tabel Global */
+div.bg-white.rounded-xl.border.border-gray-200.shadow-sm.overflow-hidden {
+    overflow-x: auto !important;
+    border-radius: 18px !important; /* rounded-lg (Apple style) */
+    border-color: #e0e0e0 !important; /* border-hairline */
+    box-shadow: none !important; /* Flat UI */
+}
+
+div.bg-white.rounded-xl.border.border-gray-200.shadow-sm.overflow-hidden table {
+    min-width: 800px;
 }
