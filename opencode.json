@@ -9,6 +9,20 @@
                 "artisan",
                 "boost:mcp"
             ]
+        },
+        "figma": {
+            "type": "local",
+            "enabled": true,
+            "command": [
+                "npx",
+                "-y",
+                "figma-developer-mcp",
+                "--stdio"
+            ],
+            "environment": {
+                "FIGMA_API_KEY": ""
+            },
+            "timeout": 30000
         }
     }
 }

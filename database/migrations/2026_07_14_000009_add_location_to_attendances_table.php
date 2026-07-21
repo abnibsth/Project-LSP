@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('attendances', function (Blueprint $table) {
+        Schema::table('absen', function (Blueprint $table) {
             // Kolom lokasi untuk check-in
             $table->decimal('latitude_checkin', 10, 8)->nullable()->after('ip_address');
             $table->decimal('longitude_checkin', 11, 8)->nullable()->after('latitude_checkin');
@@ -28,7 +28,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('attendances', function (Blueprint $table) {
+        Schema::table('absen', function (Blueprint $table) {
             $table->dropColumn([
                 'latitude_checkin',
                 'longitude_checkin',

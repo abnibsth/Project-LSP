@@ -13,15 +13,15 @@
 
     <div class="mb-6 flex items-center justify-between">
         <div>
-            <a href="{{ route('admin.karyawan.index') }}" class="text-sm text-gray-500 hover:text-gray-700">
+            <a href="{{ route('admin.karyawan.index') }}" class="text-sm text-ink-muted-48 hover:text-ink-muted-80">
                 ← Kembali ke Daftar Karyawan
             </a>
-            <h1 class="text-2xl font-bold text-gray-900 mt-2">{{ $employee->nama }}</h1>
-            <p class="text-gray-500 text-sm font-mono">NIK: {{ $employee->nik }}</p>
+            <h1 class="page-title mt-2">{{ $employee->nama }}</h1>
+            <p class="text-ink-muted-48 text-sm font-mono">NIK: {{ $employee->nik }}</p>
         </div>
         <div class="flex gap-2">
             <a href="{{ route('admin.karyawan.edit', $employee) }}"
-                class="bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium px-4 py-2 rounded-lg text-sm transition-colors">
+                class="bg-white border border-hairline hover:bg-canvas-parchment text-ink-muted-80 font-medium px-4 py-2 rounded-lg text-sm transition-colors">
                 ✎ Edit Data
             </a>
             @if($employee->is_aktif)
@@ -44,40 +44,40 @@
              ===================================================== --}}
         <div class="lg:col-span-1 space-y-4">
             {{-- Card: Info Pekerjaan --}}
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
-                <h2 class="font-semibold text-gray-800 mb-4">Informasi Pekerjaan</h2>
+            <div class="bg-white rounded-xl border border-hairline shadow-sm p-5">
+                <h2 class="font-semibold text-ink mb-4">Informasi Pekerjaan</h2>
                 <dl class="space-y-3 text-sm">
                     <div class="flex justify-between">
-                        <dt class="text-gray-500">Jabatan</dt>
-                        <dd class="font-medium text-gray-900">{{ $employee->jabatan }}</dd>
+                        <dt class="text-ink-muted-48">Jabatan</dt>
+                        <dd class="font-medium text-ink">{{ $employee->jabatan }}</dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="text-gray-500">Departemen</dt>
-                        <dd class="font-medium text-gray-900">{{ $employee->departemen }}</dd>
+                        <dt class="text-ink-muted-48">Departemen</dt>
+                        <dd class="font-medium text-ink">{{ $employee->departemen }}</dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="text-gray-500">Status Kerja</dt>
+                        <dt class="text-ink-muted-48">Status Kerja</dt>
                         <dd>
                             <span class="px-2 py-0.5 rounded-full text-xs font-medium
-                                @if($employee->status_kerja === 'tetap') bg-blue-100 text-blue-700
+                                @if($employee->status_kerja === 'tetap') bg-blue-100 text-primary
                                 @elseif($employee->status_kerja === 'kontrak') bg-purple-100 text-purple-700
-                                @else bg-gray-100 text-gray-600
+                                @else bg-canvas-parchment text-ink-muted-80
                                 @endif">
                                 {{ ucfirst($employee->status_kerja) }}
                             </span>
                         </dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="text-gray-500">Gaji Pokok</dt>
-                        <dd class="font-bold text-gray-900">{{ $employee->gaji_pokok_format }}</dd>
+                        <dt class="text-ink-muted-48">Gaji Pokok</dt>
+                        <dd class="font-bold text-ink">{{ $employee->gaji_pokok_format }}</dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="text-gray-500">Tgl Masuk</dt>
+                        <dt class="text-ink-muted-48">Tgl Masuk</dt>
                         {{-- translatedFormat: format tanggal dalam bahasa lokal --}}
-                        <dd class="text-gray-700">{{ $employee->tanggal_masuk->translatedFormat('d M Y') }}</dd>
+                        <dd class="text-ink-muted-80">{{ $employee->tanggal_masuk->translatedFormat('d M Y') }}</dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="text-gray-500">Status</dt>
+                        <dt class="text-ink-muted-48">Status</dt>
                         <dd>
                             <span class="px-2 py-0.5 rounded-full text-xs font-medium
                                 {{ $employee->is_aktif ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600' }}">
@@ -89,30 +89,30 @@
             </div>
 
             {{-- Card: Info Kontak --}}
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
-                <h2 class="font-semibold text-gray-800 mb-4">Kontak & Rekening</h2>
+            <div class="bg-white rounded-xl border border-hairline shadow-sm p-5">
+                <h2 class="font-semibold text-ink mb-4">Kontak & Rekening</h2>
                 <dl class="space-y-3 text-sm">
                     <div>
-                        <dt class="text-gray-500 mb-0.5">Email Login</dt>
-                        <dd class="font-medium text-gray-900">{{ $employee->user?->email ?? '-' }}</dd>
+                        <dt class="text-ink-muted-48 mb-0.5">Email Login</dt>
+                        <dd class="font-medium text-ink">{{ $employee->user?->email ?? '-' }}</dd>
                     </div>
                     <div>
-                        <dt class="text-gray-500 mb-0.5">No. Telepon</dt>
-                        <dd class="font-medium text-gray-900">{{ $employee->no_telepon ?? '-' }}</dd>
+                        <dt class="text-ink-muted-48 mb-0.5">No. Telepon</dt>
+                        <dd class="font-medium text-ink">{{ $employee->no_telepon ?? '-' }}</dd>
                     </div>
                     <div>
-                        <dt class="text-gray-500 mb-0.5">Rekening</dt>
-                        <dd class="font-medium text-gray-900">
+                        <dt class="text-ink-muted-48 mb-0.5">Rekening</dt>
+                        <dd class="font-medium text-ink">
                             @if($employee->no_rekening)
                                 {{ $employee->nama_bank }} — {{ $employee->no_rekening }}
                             @else
-                                <span class="text-gray-400">Belum diisi</span>
+                                <span class="text-ink-muted-48">Belum diisi</span>
                             @endif
                         </dd>
                     </div>
                     <div>
-                        <dt class="text-gray-500 mb-0.5">Alamat</dt>
-                        <dd class="text-gray-700 text-xs">{{ $employee->alamat ?? '-' }}</dd>
+                        <dt class="text-ink-muted-48 mb-0.5">Alamat</dt>
+                        <dd class="text-ink-muted-80 text-xs">{{ $employee->alamat ?? '-' }}</dd>
                     </div>
                 </dl>
             </div>
@@ -124,15 +124,15 @@
         <div class="lg:col-span-2 space-y-6">
 
             {{-- Tabel: 10 Absensi Terakhir --}}
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-100">
-                    <h2 class="font-semibold text-gray-800">10 Absensi Terakhir</h2>
+            <div class="bg-white rounded-xl border border-hairline shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b border-divider-soft">
+                    <h2 class="font-semibold text-ink">10 Absensi Terakhir</h2>
                 </div>
                 {{-- overflow-x-auto: Agar tabel bisa di-scroll secara horizontal jika ukuran layar lebih kecil dari lebar tabel, sehingga tidak terpotong --}}
                 <div class="overflow-x-auto">
                     {{-- min-w-[500px]: Menentukan lebar minimal tabel absensi agar kolom-kolomnya tetap proporsional dan teksnya tidak bertumpuk --}}
                     <table class="w-full text-sm min-w-[500px]">
-                        <thead class="bg-gray-50 text-gray-500 uppercase text-xs">
+                        <thead class="bg-canvas-parchment text-ink-muted-48 uppercase text-xs">
                             <tr>
                                 <th class="px-6 py-3 text-left">Tanggal</th>
                                 <th class="px-6 py-3 text-left">Status</th>
@@ -141,10 +141,10 @@
                                 <th class="px-6 py-3 text-right">Menit Telat</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-100">
+                        <tbody class="divide-y divide-divider-soft">
                             @forelse($employee->attendances as $att)
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-6 py-2.5 text-gray-600 text-xs">
+                                <tr class="hover:bg-canvas-parchment">
+                                    <td class="px-6 py-2.5 text-ink-muted-80 text-xs">
                                         {{ $att->tanggal->translatedFormat('D, d M Y') }}
                                     </td>
                                     <td class="px-6 py-2.5">
@@ -156,10 +156,10 @@
                                             {{ ucfirst($att->status) }}
                                         </span>
                                     </td>
-                                    <td class="px-6 py-2.5 font-mono text-xs text-gray-600">
+                                    <td class="px-6 py-2.5 font-mono text-xs text-ink-muted-80">
                                         {{ $att->waktu_checkin?->format('H:i') ?? '-' }}
                                     </td>
-                                    <td class="px-6 py-2.5 font-mono text-xs text-gray-600">
+                                    <td class="px-6 py-2.5 font-mono text-xs text-ink-muted-80">
                                         {{ $att->waktu_checkout?->format('H:i') ?? '-' }}
                                     </td>
                                     <td class="px-6 py-2.5 text-right text-xs">
@@ -168,7 +168,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="px-6 py-8 text-center text-gray-400 text-sm">
+                                    <td colspan="5" class="px-6 py-8 text-center text-ink-muted-48 text-sm">
                                         Belum ada data absensi.
                                     </td>
                                 </tr>
@@ -179,15 +179,15 @@
             </div>
 
             {{-- Tabel: Riwayat Slip Gaji --}}
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-100">
-                    <h2 class="font-semibold text-gray-800">Riwayat Slip Gaji</h2>
+            <div class="bg-white rounded-xl border border-hairline shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b border-divider-soft">
+                    <h2 class="font-semibold text-ink">Riwayat Slip Gaji</h2>
                 </div>
                 {{-- overflow-x-auto: Agar tabel slip gaji dapat di-scroll horizontal dan tidak terpotong di layar kecil --}}
                 <div class="overflow-x-auto">
                     {{-- min-w-[600px]: Menentukan lebar minimal tabel riwayat slip gaji agar kolom 'Aksi' (Detail) di sebelah kanan tidak tertekan/terpotong --}}
                     <table class="w-full text-sm min-w-[600px]">
-                        <thead class="bg-gray-50 text-gray-500 uppercase text-xs">
+                        <thead class="bg-canvas-parchment text-ink-muted-48 uppercase text-xs">
                             <tr>
                                 <th class="px-6 py-3 text-left">Periode</th>
                                 <th class="px-6 py-3 text-right">Gaji Bruto</th>
@@ -196,31 +196,31 @@
                                 <th class="px-6 py-3 text-center">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-100">
+                        <tbody class="divide-y divide-divider-soft">
                             @forelse($employee->payslips as $slip)
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-6 py-2.5 text-gray-700">
+                                <tr class="hover:bg-canvas-parchment">
+                                    <td class="px-6 py-2.5 text-ink-muted-80">
                                         {{ $slip->payrollPeriod->label }}
                                     </td>
-                                    <td class="px-6 py-2.5 text-right text-gray-600 text-xs">
+                                    <td class="px-6 py-2.5 text-right text-ink-muted-80 text-xs">
                                         Rp {{ number_format($slip->gaji_bruto, 0, ',', '.') }}
                                     </td>
                                     <td class="px-6 py-2.5 text-right text-red-500 text-xs">
                                         - Rp {{ number_format($slip->total_potongan, 0, ',', '.') }}
                                     </td>
-                                    <td class="px-6 py-2.5 text-right font-bold text-gray-900">
+                                    <td class="px-6 py-2.5 text-right font-bold text-ink">
                                         Rp {{ number_format($slip->gaji_bersih, 0, ',', '.') }}
                                     </td>
                                     <td class="px-6 py-2.5 text-center">
                                         <a href="{{ route('admin.slip-gaji.show', $slip) }}"
-                                            class="text-blue-600 hover:text-blue-800 text-xs font-medium">
+                                            class="text-primary hover:text-blue-800 text-xs font-medium">
                                             Detail
                                         </a>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="px-6 py-8 text-center text-gray-400 text-sm">
+                                    <td colspan="5" class="px-6 py-8 text-center text-ink-muted-48 text-sm">
                                         Belum ada data slip gaji.
                                     </td>
                                 </tr>

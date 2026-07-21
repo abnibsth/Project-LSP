@@ -64,11 +64,7 @@ class DashboardController extends Controller
             $dataPengeluaran[] = (float) $period->payslips->sum('gaji_bersih');
         }
 
-        // Jika data kosong, buat mock data historis agar grafik tetap terlihat keren untuk presentasi LSP
-        if (empty($labels)) {
-            $labels = ['Sep 2025', 'Okt 2025', 'Nov 2025', 'Des 2025', 'Jan 2026', 'Feb 2026'];
-            $dataPengeluaran = [12500000, 13200000, 12900000, 14500000, 14200000, 15000000];
-        }
+        $hasPayrollData = ! empty($labels);
 
         return view('admin.dashboard', compact(
             'totalKaryawan',
@@ -76,7 +72,8 @@ class DashboardController extends Controller
             'alphaHariIni',
             'periodeAktif',
             'labels',
-            'dataPengeluaran'
+            'dataPengeluaran',
+            'hasPayrollData'
         ));
     }
 }

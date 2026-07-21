@@ -13,14 +13,14 @@
     --}}
 
     <div class="mb-6">
-        <a href="{{ route('admin.karyawan.show', $employee) }}" class="text-sm text-gray-500 hover:text-gray-700">
+        <a href="{{ route('admin.karyawan.show', $employee) }}" class="text-sm text-ink-muted-48 hover:text-ink-muted-80">
             ← Kembali ke Detail {{ $employee->nama }}
         </a>
-        <h1 class="text-2xl font-bold text-gray-900 mt-2">Edit Karyawan</h1>
-        <p class="text-gray-500 text-sm">NIK: <span class="font-mono">{{ $employee->nik }}</span></p>
+        <h1 class="page-title mt-2">Edit Karyawan</h1>
+        <p class="text-ink-muted-48 text-sm">NIK: <span class="font-mono">{{ $employee->nik }}</span></p>
     </div>
 
-    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 max-w-2xl">
+    <div class="bg-white rounded-xl border border-hairline shadow-sm p-6 max-w-2xl">
         {{-- action mengarah ke route UPDATE (PUT request) --}}
         <form method="POST" action="{{ route('admin.karyawan.update', $employee) }}" class="space-y-4">
             @csrf
@@ -28,47 +28,47 @@
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">NIK (16 Digit KTP) <span class="text-red-500">*</span></label>
+                    <label class="form-label">NIK (16 Digit KTP) <span class="text-red-500">*</span></label>
                     {{-- old('nik', $employee->nik): pakai input lama jika ada error validasi, atau nilai dari DB --}}
                     <input type="text" name="nik" value="{{ old('nik', $employee->nik) }}" required
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 @error('nik') border-red-400 @enderror">
+                        class="form-input @error('nik') border-red-400 @enderror">
                     @error('nik')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
-                    <p class="text-xs text-gray-400 mt-1">Harus diawali <strong>317</strong> (DKI Jakarta) & 16 digit angka.</p>
+                    <p class="text-xs text-ink-muted-48 mt-1">Harus diawali <strong>317</strong> (DKI Jakarta) & 16 digit angka.</p>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
+                    <label class="form-label">Nama Lengkap <span class="text-red-500">*</span></label>
                     <input type="text" name="nama" value="{{ old('nama', $employee->nama) }}" required
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500">
+                        class="form-input">
                     @error('nama')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                 </div>
             </div>
 
             {{-- Email tidak bisa diubah, hanya ditampilkan sebagai info --}}
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Email Login</label>
+                <label class="form-label">Email Login</label>
                 <input type="text" value="{{ $employee->user?->email ?? '-' }}" disabled
-                    class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-gray-50 text-gray-400 cursor-not-allowed">
-                <p class="text-xs text-gray-400 mt-1">Email tidak bisa diubah dari sini.</p>
+                    class="w-full border border-hairline rounded-lg px-3 py-2.5 text-sm bg-canvas-parchment text-ink-muted-48 cursor-not-allowed">
+                <p class="text-xs text-ink-muted-48 mt-1">Email tidak bisa diubah dari sini.</p>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Jabatan <span class="text-red-500">*</span></label>
+                    <label class="form-label">Jabatan <span class="text-red-500">*</span></label>
                     <input type="text" name="jabatan" value="{{ old('jabatan', $employee->jabatan) }}" required
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500">
+                        class="form-input">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Departemen <span class="text-red-500">*</span></label>
+                    <label class="form-label">Departemen <span class="text-red-500">*</span></label>
                     <input type="text" name="departemen" value="{{ old('departemen', $employee->departemen) }}" required
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500">
+                        class="form-input">
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Status Kerja <span class="text-red-500">*</span></label>
+                    <label class="form-label">Status Kerja <span class="text-red-500">*</span></label>
                     <select name="status_kerja" required
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500">
+                        class="form-input">
                         {{-- Untuk setiap option, cek apakah ini nilai yang sedang tersimpan --}}
                         <option value="probation" {{ old('status_kerja', $employee->status_kerja) === 'probation' ? 'selected' : '' }}>Probation</option>
                         <option value="kontrak"   {{ old('status_kerja', $employee->status_kerja) === 'kontrak'   ? 'selected' : '' }}>Kontrak</option>
@@ -76,17 +76,17 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Gaji Pokok (Rp) <span class="text-red-500">*</span></label>
+                    <label class="form-label">Gaji Pokok (Rp) <span class="text-red-500">*</span></label>
                     <input type="number" name="gaji_pokok" value="{{ old('gaji_pokok', $employee->gaji_pokok) }}" required min="0" step="50000"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500">
+                        class="form-input">
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama Bank</label>
+                    <label class="form-label">Nama Bank</label>
                     <select name="nama_bank"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500">
+                        class="form-input">
                         <option value="">— Pilih Bank —</option>
                         @foreach([
                             'Bank BCA (Bank Central Asia)',
@@ -105,39 +105,39 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Rekening</label>
+                    <label class="form-label">Nomor Rekening</label>
                     <input type="text" name="no_rekening" value="{{ old('no_rekening', $employee->no_rekening) }}"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500">
+                        class="form-input">
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">No. Telepon</label>
+                    <label class="form-label">No. Telepon</label>
                     <input type="text" name="no_telepon" value="{{ old('no_telepon', $employee->no_telepon) }}"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500">
+                        class="form-input">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Masuk <span class="text-red-500">*</span></label>
+                    <label class="form-label">Tanggal Masuk <span class="text-red-500">*</span></label>
                     {{-- format('Y-m-d') penting untuk input type="date" --}}
                     <input type="date" name="tanggal_masuk" value="{{ old('tanggal_masuk', $employee->tanggal_masuk->format('Y-m-d')) }}" required
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500">
+                        class="form-input">
                 </div>
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
+                <label class="form-label">Alamat</label>
                 <textarea name="alamat" rows="2"
-                    class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500">{{ old('alamat', $employee->alamat) }}</textarea>
+                    class="form-input">{{ old('alamat', $employee->alamat) }}</textarea>
             </div>
 
             <div class="flex gap-3 pt-2">
                 <button type="submit"
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2.5 rounded-lg text-sm transition-colors">
+                    class="btn btn-primary">
                     Simpan Perubahan
                 </button>
                 <a href="{{ route('admin.karyawan.show', $employee) }}"
-                    class="text-gray-600 hover:text-gray-800 px-6 py-2.5 rounded-lg text-sm border border-gray-300">
+                    class="text-ink-muted-80 hover:text-ink px-6 py-2.5 rounded-lg text-sm border border-hairline">
                     Batal
                 </a>
             </div>

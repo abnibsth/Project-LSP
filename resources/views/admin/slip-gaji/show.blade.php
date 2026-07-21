@@ -14,13 +14,13 @@
 
     <div class="mb-6 flex items-center justify-between">
         <div>
-            <a href="{{ route('admin.slip-gaji.index') }}" class="text-sm text-gray-500 hover:text-gray-700">
+            <a href="{{ route('admin.slip-gaji.index') }}" class="text-sm text-ink-muted-48 hover:text-ink-muted-80">
                 ← Kembali ke Daftar Slip Gaji
             </a>
-            <h1 class="text-2xl font-bold text-gray-900 mt-2">
+            <h1 class="page-title mt-2">
                 Slip Gaji — {{ $payslip->employee->nama }}
             </h1>
-            <p class="text-gray-500 text-sm">
+            <p class="text-ink-muted-48 text-sm">
                 Periode: {{ $payslip->payrollPeriod->label }} ·
                 NIK: <span class="font-mono">{{ $payslip->employee->nik }}</span>
             </p>
@@ -37,19 +37,19 @@
         {{-- KOLOM KIRI: Ringkasan Gaji --}}
         <div class="space-y-4">
             {{-- Card Ringkasan --}}
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
-                <h2 class="font-semibold text-gray-800 mb-4">Ringkasan Gaji</h2>
+            <div class="bg-white rounded-xl border border-hairline shadow-sm p-5">
+                <h2 class="font-semibold text-ink mb-4">Ringkasan Gaji</h2>
                 <dl class="space-y-3 text-sm">
                     <div class="flex justify-between">
-                        <dt class="text-gray-500">Gaji Pokok</dt>
+                        <dt class="text-ink-muted-48">Gaji Pokok</dt>
                         <dd class="font-medium">Rp {{ number_format($payslip->gaji_pokok, 0, ',', '.') }}</dd>
                     </div>
                     <div class="flex justify-between text-green-600">
                         <dt>+ Total Tunjangan</dt>
                         <dd class="font-medium">Rp {{ number_format($payslip->total_tunjangan, 0, ',', '.') }}</dd>
                     </div>
-                    <div class="border-t border-gray-100 pt-3 flex justify-between font-semibold">
-                        <dt class="text-gray-700">Gaji bruto </dt>
+                    <div class="border-t border-divider-soft pt-3 flex justify-between font-semibold">
+                        <dt class="text-ink-muted-80">Gaji bruto </dt>
                         <dd>Rp {{ number_format($payslip->gaji_bruto, 0, ',', '.') }}</dd>
                     </div>
 
@@ -68,8 +68,8 @@
                     @empty
                         {{-- Tidak ada potongan lain --}}
                     @endforelse
-                    <div class="border-t border-gray-100 pt-3 flex justify-between font-bold text-lg">
-                        <dt class="text-gray-900">Gaji Bersih</dt>
+                    <div class="border-t border-divider-soft pt-3 flex justify-between font-bold text-lg">
+                        <dt class="text-ink">Gaji Bersih</dt>
                         <dd class="text-green-600">Rp {{ number_format($payslip->gaji_bersih, 0, ',', '.') }}</dd>
                     </div>
                 </dl>
@@ -77,24 +77,24 @@
 
             {{-- Card Info Kehadiran (dari detail_json) --}}
             @if($payslip->detail_json)
-                <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
-                    <h2 class="font-semibold text-gray-800 mb-4">Rekap Kehadiran</h2>
+                <div class="bg-white rounded-xl border border-hairline shadow-sm p-5">
+                    <h2 class="font-semibold text-ink mb-4">Rekap Kehadiran</h2>
                     {{-- detail_json berisi array data kehadiran yang disimpan saat payroll diproses --}}
                     <dl class="space-y-2 text-sm">
                         <div class="flex justify-between">
-                            <dt class="text-gray-500">Total Hari Hadir</dt>
+                            <dt class="text-ink-muted-48">Total Hari Hadir</dt>
                             <dd class="font-medium text-green-600">{{ $payslip->detail_json['total_hadir'] }} hari</dd>
                         </div>
                         <div class="flex justify-between">
-                            <dt class="text-gray-500">Telat</dt>
+                            <dt class="text-ink-muted-48">Telat</dt>
                             <dd class="font-medium text-yellow-600">{{ $payslip->detail_json['total_telat'] }} kali</dd>
                         </div>
                         <div class="flex justify-between">
-                            <dt class="text-gray-500">Alpha</dt>
+                            <dt class="text-ink-muted-48">Alpha</dt>
                             <dd class="font-medium text-red-600">{{ $payslip->detail_json['total_alpha'] }} hari</dd>
                         </div>
                         <div class="flex justify-between">
-                            <dt class="text-gray-500">Total Menit Telat</dt>
+                            <dt class="text-ink-muted-48">Total Menit Telat</dt>
                             <dd class="font-medium">{{ $payslip->detail_json['total_menit_telat'] }} menit</dd>
                         </div>
                     </dl>
@@ -106,23 +106,23 @@
              KOLOM KANAN: Rincian Komponen
              ===================================================== --}}
         <div class="lg:col-span-2">
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-100">
-                    <h2 class="font-semibold text-gray-800">Rincian Komponen Gaji</h2>
+            <div class="bg-white rounded-xl border border-hairline shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b border-divider-soft">
+                    <h2 class="font-semibold text-ink">Rincian Komponen Gaji</h2>
                 </div>
                 <table class="w-full text-sm">
-                    <thead class="bg-gray-50 text-gray-500 uppercase text-xs">
+                    <thead class="bg-canvas-parchment text-ink-muted-48 uppercase text-xs">
                         <tr>
                             <th class="px-6 py-3 text-left">Komponen</th>
                             <th class="px-6 py-3 text-left">Tipe</th>
                             <th class="px-6 py-3 text-right">Nilai</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-100">
+                    <tbody class="divide-y divide-divider-soft">
                         {{-- Tampilkan tunjangan dulu --}}
                         @foreach($payslip->components->where('tipe', 'tunjangan') as $comp)
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-3 text-gray-700">{{ $comp->nama_komponen }}</td>
+                            <tr class="hover:bg-canvas-parchment">
+                                <td class="px-6 py-3 text-ink-muted-80">{{ $comp->nama_komponen }}</td>
                                 <td class="px-6 py-3">
                                     <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Tunjangan</span>
                                 </td>
@@ -134,8 +134,8 @@
 
                         {{-- Lalu tampilkan potongan --}}
                         @foreach($payslip->components->where('tipe', 'potongan') as $comp)
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-3 text-gray-700">{{ $comp->nama_komponen }}</td>
+                            <tr class="hover:bg-canvas-parchment">
+                                <td class="px-6 py-3 text-ink-muted-80">{{ $comp->nama_komponen }}</td>
                                 <td class="px-6 py-3">
                                     <span class="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full">Potongan</span>
                                 </td>
@@ -147,7 +147,7 @@
 
                         @if($payslip->components->isEmpty())
                             <tr>
-                                <td colspan="3" class="px-6 py-8 text-center text-gray-400 text-sm">
+                                <td colspan="3" class="px-6 py-8 text-center text-ink-muted-48 text-sm">
                                     Tidak ada rincian komponen.
                                 </td>
                             </tr>

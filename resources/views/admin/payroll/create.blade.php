@@ -4,18 +4,18 @@
 
 @section('content')
     <div class="mb-6">
-        <a href="{{ route('admin.payroll.index') }}" class="text-sm text-gray-500 hover:text-gray-700">← Kembali ke Payroll</a>
-        <h1 class="text-2xl font-bold text-gray-900 mt-2">Buat Periode Payroll Baru</h1>
+        <a href="{{ route('admin.payroll.index') }}" class="text-sm text-ink-muted-48 hover:text-ink-muted-80">← Kembali ke Payroll</a>
+        <h1 class="page-title mt-2">Buat Periode Payroll Baru</h1>
     </div>
 
-    <div class="max-w-md bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+    <div class="max-w-md bg-white rounded-xl border border-hairline shadow-sm p-6">
         <form method="POST" action="{{ route('admin.payroll.store') }}" class="space-y-4">
             @csrf
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Bulan</label>
+                <label class="form-label">Bulan</label>
                 <select name="bulan" required
-                    class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 {{ $errors->has('bulan') ? 'border-red-400' : '' }}">
+                    class="form-input {{ $errors->has('bulan') ? 'border-red-400' : '' }}">
                     <option value="">Pilih Bulan</option>
                     @foreach(range(1, 12) as $m)
                         <option value="{{ $m }}" {{ old('bulan') == $m ? 'selected' : '' }}>
@@ -27,16 +27,16 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Tahun</label>
+                <label class="form-label">Tahun</label>
                 <select name="tahun" required
-                    class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500">
+                    class="form-input">
                     @foreach(range(date('Y'), date('Y') - 3) as $y)
                         <option value="{{ $y }}" {{ old('tahun', date('Y')) == $y ? 'selected' : '' }}>{{ $y }}</option>
                     @endforeach
                 </select>
             </div>
 
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-700">
+            <div class="bg-primary/5 border border-primary/20 rounded-lg p-3 text-sm text-primary">
                 ℹ️ Setelah periode dibuat, klik <strong>Proses Payroll</strong> untuk menghitung gaji semua karyawan aktif secara otomatis.
             </div>
 
@@ -46,7 +46,7 @@
                     Buat Periode
                 </button>
                 <a href="{{ route('admin.payroll.index') }}"
-                    class="text-gray-600 hover:text-gray-800 px-5 py-2.5 rounded-lg text-sm border border-gray-300">
+                    class="text-ink-muted-80 hover:text-ink px-5 py-2.5 rounded-lg text-sm border border-hairline">
                     Batal
                 </a>
             </div>

@@ -12,8 +12,8 @@
     --}}
 
     <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Profil Saya</h1>
-        <p class="text-gray-500 text-sm mt-1">Lihat dan perbarui informasi pribadi Anda.</p>
+        <h1 class="page-title">Profil Saya</h1>
+        <p class="page-subtitle">Lihat dan perbarui informasi pribadi Anda.</p>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-5xl">
@@ -23,51 +23,51 @@
              Data ini hanya bisa diubah oleh Admin/HRD
              ===================================================== --}}
         <div class="space-y-4">
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
-                <h2 class="font-semibold text-gray-800 mb-4">Informasi Pekerjaan</h2>
-                <p class="text-xs text-gray-400 mb-3">Data ini hanya bisa diubah oleh Admin/HRD.</p>
+            <div class="bg-white rounded-xl border border-hairline shadow-sm p-5">
+                <h2 class="font-semibold text-ink mb-4">Informasi Pekerjaan</h2>
+                <p class="text-xs text-ink-muted-48 mb-3">Data ini hanya bisa diubah oleh Admin/HRD.</p>
                 <dl class="space-y-3 text-sm">
                     <div class="flex justify-between">
-                        <dt class="text-gray-500">NIK</dt>
+                        <dt class="text-ink-muted-48">NIK</dt>
                         {{-- NIK = Nomor Induk Karyawan, identitas unik setiap karyawan --}}
-                        <dd class="font-mono font-medium text-gray-900">{{ $employee->nik }}</dd>
+                        <dd class="font-mono font-medium text-ink">{{ $employee->nik }}</dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="text-gray-500">Nama</dt>
-                        <dd class="font-medium text-gray-900">{{ $employee->nama }}</dd>
+                        <dt class="text-ink-muted-48">Nama</dt>
+                        <dd class="font-medium text-ink">{{ $employee->nama }}</dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="text-gray-500">Jabatan</dt>
-                        <dd class="font-medium text-gray-900">{{ $employee->jabatan }}</dd>
+                        <dt class="text-ink-muted-48">Jabatan</dt>
+                        <dd class="font-medium text-ink">{{ $employee->jabatan }}</dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="text-gray-500">Departemen</dt>
-                        <dd class="font-medium text-gray-900">{{ $employee->departemen }}</dd>
+                        <dt class="text-ink-muted-48">Departemen</dt>
+                        <dd class="font-medium text-ink">{{ $employee->departemen }}</dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="text-gray-500">Status Kerja</dt>
+                        <dt class="text-ink-muted-48">Status Kerja</dt>
                         <dd>
                             <span class="px-2 py-0.5 rounded-full text-xs font-medium
-                                @if($employee->status_kerja === 'tetap') bg-blue-100 text-blue-700
+                                @if($employee->status_kerja === 'tetap') bg-blue-100 text-primary
                                 @elseif($employee->status_kerja === 'kontrak') bg-purple-100 text-purple-700
-                                @else bg-gray-100 text-gray-600
+                                @else bg-canvas-parchment text-ink-muted-80
                                 @endif">
                                 {{ ucfirst($employee->status_kerja) }}
                             </span>
                         </dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="text-gray-500">Gaji Pokok</dt>
+                        <dt class="text-ink-muted-48">Gaji Pokok</dt>
                         {{-- gaji_pokok_format = accessor dari model Employee yang sudah format Rp --}}
-                        <dd class="font-bold text-gray-900">{{ $employee->gaji_pokok_format }}</dd>
+                        <dd class="font-bold text-ink">{{ $employee->gaji_pokok_format }}</dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="text-gray-500">Tgl Masuk</dt>
-                        <dd class="text-gray-700">{{ $employee->tanggal_masuk->translatedFormat('d M Y') }}</dd>
+                        <dt class="text-ink-muted-48">Tgl Masuk</dt>
+                        <dd class="text-ink-muted-80">{{ $employee->tanggal_masuk->translatedFormat('d M Y') }}</dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="text-gray-500">Email Login</dt>
-                        <dd class="text-gray-700 text-xs">{{ auth()->user()->email }}</dd>
+                        <dt class="text-ink-muted-48">Email Login</dt>
+                        <dd class="text-ink-muted-80 text-xs">{{ auth()->user()->email }}</dd>
                     </div>
                 </dl>
             </div>
@@ -82,9 +82,9 @@
              4. Alamat
              ===================================================== --}}
         <div class="lg:col-span-2">
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-                <h2 class="font-semibold text-gray-800 mb-4">Data Pribadi</h2>
-                <p class="text-xs text-gray-400 mb-4">
+            <div class="bg-white rounded-xl border border-hairline shadow-sm p-6">
+                <h2 class="font-semibold text-ink mb-4">Data Pribadi</h2>
+                <p class="text-xs text-ink-muted-48 mb-4">
                     Anda bisa memperbarui informasi berikut. Pastikan data rekening benar agar transfer gaji lancar.
                 </p>
 
@@ -98,11 +98,11 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Bank</label>
+                            <label class="form-label">Nama Bank</label>
                             {{-- Dropdown bank: karyawan tinggal pilih dari daftar, tidak perlu ketik manual.
                                  old('nama_bank', $employee->nama_bank) → jika validasi gagal, tetap pilih yang tadi dipilih. --}}
                             <select name="nama_bank"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 @error('nama_bank') border-red-400 @enderror">
+                                class="form-input @error('nama_bank') border-red-400 @enderror">
                                 <option value="">— Pilih Bank —</option>
                                 @foreach([
                                     'Bank BCA (Bank Central Asia)',
@@ -128,11 +128,11 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Rekening</label>
+                            <label class="form-label">Nomor Rekening</label>
                             <input type="text" name="no_rekening"
                                 value="{{ old('no_rekening', $employee->no_rekening) }}"
                                 placeholder="Masukkan nomor rekening"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 @error('no_rekening') border-red-400 @enderror">
+                                class="form-input @error('no_rekening') border-red-400 @enderror">
                             @error('no_rekening')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
@@ -140,21 +140,21 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">No. Telepon</label>
+                        <label class="form-label">No. Telepon</label>
                         <input type="text" name="no_telepon"
                             value="{{ old('no_telepon', $employee->no_telepon) }}"
                             placeholder="cth: 08123456789"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 @error('no_telepon') border-red-400 @enderror">
+                            class="form-input @error('no_telepon') border-red-400 @enderror">
                         @error('no_telepon')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
+                        <label class="form-label">Alamat</label>
                         <textarea name="alamat" rows="3"
                             placeholder="Masukkan alamat lengkap"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 @error('alamat') border-red-400 @enderror">{{ old('alamat', $employee->alamat) }}</textarea>
+                            class="form-input @error('alamat') border-red-400 @enderror">{{ old('alamat', $employee->alamat) }}</textarea>
                         @error('alamat')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
@@ -162,7 +162,7 @@
 
                     <div class="pt-2">
                         <button type="submit"
-                            class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2.5 rounded-lg text-sm transition-colors">
+                            class="btn btn-primary">
                             Simpan Perubahan
                         </button>
                     </div>
@@ -170,7 +170,7 @@
             </div>
 
             {{-- Info: rekening penting untuk transfer gaji --}}
-            <div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-sm text-blue-700">
+            <div class="mt-4 bg-primary/5 border border-primary/20 rounded-lg px-4 py-3 text-sm text-primary">
                 <strong>ℹ️ Penting:</strong>
                 Pastikan nama bank dan nomor rekening Anda sudah benar. Data ini digunakan untuk proses transfer gaji setiap bulan.
             </div>

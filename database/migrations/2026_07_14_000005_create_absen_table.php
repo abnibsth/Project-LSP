@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Migration ini membuat tabel 'attendances' (Record Absensi Harian).
+ * Migration ini membuat tabel 'absen' (Record Absensi Harian).
  *
  * Tabel ini mencatat absensi setiap karyawan setiap harinya:
  * - Kapan check-in dan check-out
@@ -19,7 +19,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('attendances', function (Blueprint $table) {
+        Schema::create('absen', function (Blueprint $table) {
             $table->id();
 
             // Karyawan yang absen (FK ke tabel employees)
@@ -61,6 +61,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('attendances');
+        Schema::dropIfExists('absen');
     }
 };

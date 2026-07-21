@@ -4,10 +4,10 @@
 
 @section('content')
     <div class="mb-6">
-        <a href="{{ route('admin.payroll.index') }}" class="text-sm text-gray-500 hover:text-gray-700">← Kembali</a>
+        <a href="{{ route('admin.payroll.index') }}" class="text-sm text-ink-muted-48 hover:text-ink-muted-80">← Kembali</a>
         <div class="flex items-center justify-between mt-2">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900">Payroll: {{ $payrollPeriod->label }}</h1>
+                <h1 class="page-title">Payroll: {{ $payrollPeriod->label }}</h1>
                 <span class="px-2.5 py-1 rounded-full text-xs font-medium
                     {{ $payrollPeriod->status === 'final' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
                     {{ $payrollPeriod->status === 'final' ? '🔒 Final' : '✏️ Draft' }}
@@ -41,28 +41,28 @@
     {{-- Statistik Total --}}
     @if($payrollPeriod->payslips->count() > 0)
         <div class="grid grid-cols-3 gap-4 mb-6">
-            <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm text-center">
-                <p class="text-xs text-gray-500">Total Karyawan</p>
-                <p class="text-2xl font-bold text-gray-900">{{ $payrollPeriod->payslips->count() }}</p>
+            <div class="bg-white rounded-xl border border-hairline p-4 shadow-sm text-center">
+                <p class="text-xs text-ink-muted-48">Total Karyawan</p>
+                <p class="page-title">{{ $payrollPeriod->payslips->count() }}</p>
             </div>
-            <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm text-center">
-                <p class="text-xs text-gray-500">Total Gaji Bruto</p>
-                <p class="text-xl font-bold text-gray-900">Rp {{ number_format($payrollPeriod->payslips->sum('gaji_bruto'), 0, ',', '.') }}</p>
+            <div class="bg-white rounded-xl border border-hairline p-4 shadow-sm text-center">
+                <p class="text-xs text-ink-muted-48">Total Gaji Bruto</p>
+                <p class="text-xl font-bold text-ink">Rp {{ number_format($payrollPeriod->payslips->sum('gaji_bruto'), 0, ',', '.') }}</p>
             </div>
-            <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm text-center">
-                <p class="text-xs text-gray-500">Total Gaji Bersih</p>
+            <div class="bg-white rounded-xl border border-hairline p-4 shadow-sm text-center">
+                <p class="text-xs text-ink-muted-48">Total Gaji Bersih</p>
                 <p class="text-xl font-bold text-green-600">Rp {{ number_format($payrollPeriod->payslips->sum('gaji_bersih'), 0, ',', '.') }}</p>
             </div>
         </div>
     @endif
 
     {{-- Tabel Slip Gaji Per Karyawan --}}
-    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-            <h2 class="font-semibold text-gray-900">Daftar Slip Gaji Karyawan</h2>
+    <div class="bg-white rounded-xl border border-hairline shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-divider-soft flex items-center justify-between">
+            <h2 class="font-semibold text-ink">Daftar Slip Gaji Karyawan</h2>
         </div>
         <table class="w-full text-sm">
-            <thead class="bg-gray-50 text-gray-500 uppercase text-xs">
+            <thead class="bg-canvas-parchment text-ink-muted-48 uppercase text-xs">
                 <tr>
                     <th class="px-6 py-3 text-left">Karyawan</th>
                     <th class="px-6 py-3 text-right">Gaji Bruto</th>
@@ -71,12 +71,12 @@
                     <th class="px-6 py-3 text-center">Aksi</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100">
+            <tbody class="divide-y divide-divider-soft">
                 @forelse($payrollPeriod->payslips as $payslip)
-                    <tr class="hover:bg-gray-50">
+                    <tr class="hover:bg-canvas-parchment">
                         <td class="px-6 py-3">
                             <p class="font-medium">{{ $payslip->employee->nama }}</p>
-                            <p class="text-xs text-gray-400">{{ $payslip->employee->jabatan }} — {{ $payslip->employee->departemen }}</p>
+                            <p class="text-xs text-ink-muted-48">{{ $payslip->employee->jabatan }} — {{ $payslip->employee->departemen }}</p>
                         </td>
                         <td class="px-6 py-3 text-right">Rp {{ number_format($payslip->gaji_bruto, 0, ',', '.') }}</td>
                         <td class="px-6 py-3 text-right text-red-600 font-medium">Rp {{ number_format($payslip->total_potongan, 0, ',', '.') }}</td>
@@ -84,15 +84,15 @@
                         <td class="px-6 py-3">
                             <div class="flex gap-2 justify-center">
                                 <a href="{{ route('admin.slip-gaji.show', $payslip) }}"
-                                    class="text-blue-600 hover:text-blue-800 text-xs font-medium">Detail</a>
+                                    class="text-primary hover:text-blue-800 text-xs font-medium">Detail</a>
                                 <a href="{{ route('admin.slip-gaji.download', $payslip) }}"
-                                    class="text-gray-600 hover:text-gray-800 text-xs font-medium">PDF</a>
+                                    class="text-ink-muted-80 hover:text-ink text-xs font-medium">PDF</a>
                             </div>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-10 text-center text-gray-400">
+                        <td colspan="7" class="px-6 py-10 text-center text-ink-muted-48">
                             Belum ada data. Klik "Proses Payroll" untuk menghitung gaji karyawan.
                         </td>
                     </tr>

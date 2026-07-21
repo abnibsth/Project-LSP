@@ -36,8 +36,8 @@ class Absensi extends Model
 {
     use HasFactory;
 
-    // Tentukan secara manual nama tabel di database karena default-nya (absensis) berbeda dengan nama tabel riil (attendances)
-    protected $table = 'attendances';
+    // Tentukan secara manual nama tabel di database karena default-nya (absensis) berbeda dengan nama tabel riil (absen)
+    protected $table = 'absen';
 
     /**
      * Relasi: Record absensi ini MILIK satu karyawan.

@@ -3,104 +3,88 @@
 @section('title', 'Data Karyawan')
 
 @section('content')
-    <div class="flex items-center justify-between mb-6">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 page-header">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900">Data Karyawan</h1>
-            <p class="text-gray-500 text-sm mt-1">Kelola data seluruh karyawan perusahaan.</p>
+            <h1 class="page-title">Data Karyawan</h1>
+            <p class="page-subtitle">Kelola data seluruh karyawan perusahaan.</p>
         </div>
-        <a href="{{ route('admin.karyawan.create') }}"
-            class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2.5 rounded-lg text-sm transition-colors">
-            + Tambah Karyawan
-        </a>
+        <a href="{{ route('admin.karyawan.create') }}" class="btn btn-primary self-start">+ Tambah Karyawan</a>
     </div>
 
-    {{-- Filter & Pencarian --}}
-    <form method="GET" class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm mb-4 flex flex-wrap gap-3">
+    <form method="GET" class="ui-card p-4 mb-4 flex flex-wrap gap-3 items-center">
         <input type="text" name="cari" value="{{ request('cari') }}" placeholder="Cari nama atau NIK..."
-            class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 w-56">
-        <select name="departemen" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
+            class="form-input w-full sm:w-56">
+        <select name="departemen" class="form-select w-full sm:w-auto">
             <option value="">Semua Departemen</option>
             @foreach($departemen as $dep)
                 <option value="{{ $dep }}" {{ request('departemen') === $dep ? 'selected' : '' }}>{{ $dep }}</option>
             @endforeach
         </select>
-        <select name="status" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
+        <select name="status" class="form-select w-full sm:w-auto">
             <option value="">Semua Status</option>
             <option value="aktif" {{ request('status') === 'aktif' ? 'selected' : '' }}>Aktif</option>
             <option value="nonaktif" {{ request('status') === 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
         </select>
-        <button type="submit" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm">Filter</button>
-        <a href="{{ route('admin.karyawan.index') }}" class="text-gray-400 hover:text-gray-600 px-2 py-2 text-sm">Reset</a>
+        <button type="submit" class="btn btn-ghost">Filter</button>
+        <a href="{{ route('admin.karyawan.index') }}" class="text-sm text-ink-muted-48 hover:text-ink px-2">Reset</a>
     </form>
 
-    {{-- Tabel Daftar Karyawan --}}
-    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-        <table class="w-full text-sm">
-            <thead class="bg-gray-50 text-gray-500 uppercase text-xs">
+    <div class="ui-table-wrap">
+        <table class="ui-table">
+            <thead>
                 <tr>
-                    <th class="px-6 py-3 text-left">NIK</th>
-                    <th class="px-6 py-3 text-left">Nama</th>
-                    <th class="px-6 py-3 text-left">Jabatan / Departemen</th>
-                    <th class="px-6 py-3 text-left">Status Kerja</th>
-                    <th class="px-6 py-3 text-right">Gaji Pokok</th>
-                    <th class="px-6 py-3 text-left">Status</th>
-                    <th class="px-6 py-3 text-center">Aksi</th>
+                    <th>NIK</th>
+                    <th>Nama</th>
+                    <th>Jabatan / Departemen</th>
+                    <th>Status Kerja</th>
+                    <th class="!text-right">Gaji Pokok</th>
+                    <th>Status</th>
+                    <th class="!text-center">Aksi</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100">
+            <tbody>
                 @forelse($employees as $employee)
-                    <tr class="hover:bg-gray-50 {{ !$employee->is_aktif ? 'opacity-60' : '' }}">
-                        <td class="px-6 py-3 font-mono text-gray-500">{{ $employee->nik }}</td>
-                        <td class="px-6 py-3">
-                            <p class="font-medium text-gray-900">{{ $employee->nama }}</p>
-                            <p class="text-xs text-gray-400">{{ $employee->user?->email }}</p>
+                    <tr class="{{ !$employee->is_aktif ? 'opacity-60' : '' }}">
+                        <td class="font-mono text-ink-muted-48">{{ $employee->nik }}</td>
+                        <td>
+                            <p class="font-medium text-ink">{{ $employee->nama }}</p>
+                            <p class="text-xs text-ink-muted-48">{{ $employee->user?->email }}</p>
                         </td>
-                        <td class="px-6 py-3">
+                        <td>
                             <p>{{ $employee->jabatan }}</p>
-                            <p class="text-xs text-gray-400">{{ $employee->departemen }}</p>
+                            <p class="text-xs text-ink-muted-48">{{ $employee->departemen }}</p>
                         </td>
-                        <td class="px-6 py-3">
-                            <span class="px-2 py-0.5 rounded-full text-xs font-medium
-                                @if($employee->status_kerja === 'tetap') bg-blue-100 text-blue-700
-                                @elseif($employee->status_kerja === 'kontrak') bg-purple-100 text-purple-700
-                                @else bg-gray-100 text-gray-600
+                        <td>
+                            <span class="badge
+                                @if($employee->status_kerja === 'tetap') badge-primary
+                                @elseif($employee->status_kerja === 'kontrak') badge-purple
+                                @else badge-muted
                                 @endif">
                                 {{ ucfirst($employee->status_kerja) }}
                             </span>
                         </td>
-                        <td class="px-6 py-3 text-right font-medium">{{ $employee->gaji_pokok_format }}</td>
-                        <td class="px-6 py-3">
-                            <span class="px-2 py-0.5 rounded-full text-xs font-medium
-                                {{ $employee->is_aktif ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600' }}">
+                        <td class="text-right font-medium">{{ $employee->gaji_pokok_format }}</td>
+                        <td>
+                            <span class="badge {{ $employee->is_aktif ? 'badge-success' : 'badge-danger' }}">
                                 {{ $employee->is_aktif ? 'Aktif' : 'Nonaktif' }}
                             </span>
                         </td>
-                        <td class="px-6 py-3">
+                        <td>
                             <div class="flex gap-1.5 justify-center items-center">
-                                <a href="{{ route('admin.karyawan.show', $employee) }}"
-                                    class="px-2.5 py-1 bg-primary/10 text-primary hover:bg-primary/20 transition-all rounded-sm text-[10px] font-bold active:scale-95">
-                                    Detail
-                                </a>
-                                <a href="{{ route('admin.karyawan.edit', $employee) }}"
-                                    class="px-2.5 py-1 bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all rounded-sm text-[10px] font-bold active:scale-95">
-                                    Edit
-                                </a>
+                                <a href="{{ route('admin.karyawan.show', $employee) }}" class="btn btn-action-soft">Detail</a>
+                                <a href="{{ route('admin.karyawan.edit', $employee) }}" class="btn btn-muted-soft">Edit</a>
                                 @if($employee->is_aktif)
                                     <form method="POST" action="{{ route('admin.karyawan.nonaktifkan', $employee) }}"
                                         onsubmit="return confirm('Nonaktifkan {{ $employee->nama }}?')" class="m-0 p-0 flex">
                                         @csrf
-                                        <button type="submit" class="px-2.5 py-1 bg-red-50 text-red-600 hover:bg-red-100 transition-all rounded-sm text-[10px] font-bold active:scale-95 cursor-pointer">
-                                            Nonaktifkan
-                                        </button>
+                                        <button type="submit" class="btn btn-danger-soft">Nonaktifkan</button>
                                     </form>
                                 @else
                                     <form method="POST" action="{{ route('admin.karyawan.destroy', $employee) }}"
                                         onsubmit="return confirm('Aktifkan kembali {{ $employee->nama }}?')" class="m-0 p-0 flex">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="px-2.5 py-1 bg-green-50 text-green-700 hover:bg-green-100 transition-all rounded-sm text-[10px] font-bold active:scale-95 cursor-pointer">
-                                            Aktifkan
-                                        </button>
+                                        <button type="submit" class="btn btn-action-soft !bg-green-50 !text-green-700">Aktifkan</button>
                                     </form>
                                 @endif
                             </div>
@@ -108,9 +92,9 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-10 text-center text-gray-400">
+                        <td colspan="7" class="!text-center !py-10 text-ink-muted-48">
                             Tidak ada data karyawan.
-                            <a href="{{ route('admin.karyawan.create') }}" class="text-blue-600 ml-1">Tambah karyawan?</a>
+                            <a href="{{ route('admin.karyawan.create') }}" class="text-primary ml-1">Tambah karyawan?</a>
                         </td>
                     </tr>
                 @endforelse
@@ -118,7 +102,7 @@
         </table>
 
         @if($employees->hasPages())
-            <div class="px-6 py-4 border-t border-gray-100">
+            <div class="px-6 py-4 border-t border-divider-soft">
                 {{ $employees->links() }}
             </div>
         @endif
