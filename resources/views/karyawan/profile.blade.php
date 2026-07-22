@@ -11,63 +11,63 @@
         (hanya Admin/HRD yang bisa mengubah data tersebut).
     --}}
 
-    <div class="mb-6">
+    <div class="page-header">
         <h1 class="page-title">Profil Saya</h1>
         <p class="page-subtitle">Lihat dan perbarui informasi pribadi Anda.</p>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-5xl">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 max-w-5xl">
 
         {{-- =====================================================
              KOLOM KIRI: Informasi yang TIDAK bisa diubah karyawan
              Data ini hanya bisa diubah oleh Admin/HRD
              ===================================================== --}}
         <div class="space-y-4">
-            <div class="bg-white rounded-xl border border-hairline shadow-sm p-5">
-                <h2 class="font-semibold text-ink mb-4">Informasi Pekerjaan</h2>
-                <p class="text-xs text-ink-muted-48 mb-3">Data ini hanya bisa diubah oleh Admin/HRD.</p>
-                <dl class="space-y-3 text-sm">
-                    <div class="flex justify-between">
-                        <dt class="text-ink-muted-48">NIK</dt>
+            <div class="ui-card ui-card-pad">
+                <h2 class="section-title mb-1">Informasi Pekerjaan</h2>
+                <p class="text-xs text-ink-muted-48 mb-4">Hanya Admin/HRD yang dapat mengubah data ini.</p>
+                <dl class="info-list">
+                    <div class="info-row">
+                        <dt>NIK</dt>
                         {{-- NIK = Nomor Induk Karyawan, identitas unik setiap karyawan --}}
-                        <dd class="font-mono font-medium text-ink">{{ $employee->nik }}</dd>
+                        <dd class="font-mono">{{ $employee->nik }}</dd>
                     </div>
-                    <div class="flex justify-between">
-                        <dt class="text-ink-muted-48">Nama</dt>
-                        <dd class="font-medium text-ink">{{ $employee->nama }}</dd>
+                    <div class="info-row">
+                        <dt>Nama</dt>
+                        <dd>{{ $employee->nama }}</dd>
                     </div>
-                    <div class="flex justify-between">
-                        <dt class="text-ink-muted-48">Jabatan</dt>
-                        <dd class="font-medium text-ink">{{ $employee->jabatan }}</dd>
+                    <div class="info-row">
+                        <dt>Jabatan</dt>
+                        <dd>{{ $employee->jabatan }}</dd>
                     </div>
-                    <div class="flex justify-between">
-                        <dt class="text-ink-muted-48">Departemen</dt>
-                        <dd class="font-medium text-ink">{{ $employee->departemen }}</dd>
+                    <div class="info-row">
+                        <dt>Departemen</dt>
+                        <dd>{{ $employee->departemen }}</dd>
                     </div>
-                    <div class="flex justify-between">
-                        <dt class="text-ink-muted-48">Status Kerja</dt>
+                    <div class="info-row">
+                        <dt>Status Kerja</dt>
                         <dd>
-                            <span class="px-2 py-0.5 rounded-full text-xs font-medium
-                                @if($employee->status_kerja === 'tetap') bg-blue-100 text-primary
-                                @elseif($employee->status_kerja === 'kontrak') bg-purple-100 text-purple-700
-                                @else bg-canvas-parchment text-ink-muted-80
+                            <span class="badge
+                                @if($employee->status_kerja === 'tetap') badge-primary
+                                @elseif($employee->status_kerja === 'kontrak') badge-purple
+                                @else badge-muted
                                 @endif">
                                 {{ ucfirst($employee->status_kerja) }}
                             </span>
                         </dd>
                     </div>
-                    <div class="flex justify-between">
-                        <dt class="text-ink-muted-48">Gaji Pokok</dt>
+                    <div class="info-row">
+                        <dt>Gaji Pokok</dt>
                         {{-- gaji_pokok_format = accessor dari model Employee yang sudah format Rp --}}
-                        <dd class="font-bold text-ink">{{ $employee->gaji_pokok_format }}</dd>
+                        <dd class="font-semibold">{{ $employee->gaji_pokok_format }}</dd>
                     </div>
-                    <div class="flex justify-between">
-                        <dt class="text-ink-muted-48">Tgl Masuk</dt>
-                        <dd class="text-ink-muted-80">{{ $employee->tanggal_masuk->translatedFormat('d M Y') }}</dd>
+                    <div class="info-row">
+                        <dt>Tgl Masuk</dt>
+                        <dd class="!font-normal text-ink-muted-80">{{ $employee->tanggal_masuk->translatedFormat('d M Y') }}</dd>
                     </div>
-                    <div class="flex justify-between">
-                        <dt class="text-ink-muted-48">Email Login</dt>
-                        <dd class="text-ink-muted-80 text-xs">{{ auth()->user()->email }}</dd>
+                    <div class="info-row">
+                        <dt>Email Login</dt>
+                        <dd class="!font-normal text-ink-muted-80 text-xs">{{ auth()->user()->email }}</dd>
                     </div>
                 </dl>
             </div>
@@ -81,11 +81,11 @@
              3. No Telepon
              4. Alamat
              ===================================================== --}}
-        <div class="lg:col-span-2">
-            <div class="bg-white rounded-xl border border-hairline shadow-sm p-6">
-                <h2 class="font-semibold text-ink mb-4">Data Pribadi</h2>
-                <p class="text-xs text-ink-muted-48 mb-4">
-                    Anda bisa memperbarui informasi berikut. Pastikan data rekening benar agar transfer gaji lancar.
+        <div class="lg:col-span-2 space-y-4">
+            <div class="ui-card ui-card-pad">
+                <h2 class="section-title mb-1">Data Pribadi</h2>
+                <p class="text-xs text-ink-muted-48 mb-5">
+                    Pastikan data rekening benar agar transfer gaji lancar.
                 </p>
 
                 {{-- Form: action ke route update profil --}}
@@ -98,11 +98,11 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="form-label">Nama Bank</label>
+                            <label class="form-label" for="nama_bank">Nama Bank</label>
                             {{-- Dropdown bank: karyawan tinggal pilih dari daftar, tidak perlu ketik manual.
                                  old('nama_bank', $employee->nama_bank) → jika validasi gagal, tetap pilih yang tadi dipilih. --}}
-                            <select name="nama_bank"
-                                class="form-input @error('nama_bank') border-red-400 @enderror">
+                            <select id="nama_bank" name="nama_bank"
+                                class="form-select {{ $errors->has('nama_bank') ? 'is-invalid' : '' }}">
                                 <option value="">— Pilih Bank —</option>
                                 @foreach([
                                     'Bank BCA (Bank Central Asia)',
@@ -123,46 +123,45 @@
                                 @endforeach
                             </select>
                             @error('nama_bank')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                <p class="form-error">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <div>
-                            <label class="form-label">Nomor Rekening</label>
-                            <input type="text" name="no_rekening"
+                            <label class="form-label" for="no_rekening">Nomor Rekening</label>
+                            <input type="text" id="no_rekening" name="no_rekening"
                                 value="{{ old('no_rekening', $employee->no_rekening) }}"
                                 placeholder="Masukkan nomor rekening"
-                                class="form-input @error('no_rekening') border-red-400 @enderror">
+                                class="form-input {{ $errors->has('no_rekening') ? 'is-invalid' : '' }}">
                             @error('no_rekening')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                <p class="form-error">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>
 
                     <div>
-                        <label class="form-label">No. Telepon</label>
-                        <input type="text" name="no_telepon"
+                        <label class="form-label" for="no_telepon">No. Telepon</label>
+                        <input type="text" id="no_telepon" name="no_telepon"
                             value="{{ old('no_telepon', $employee->no_telepon) }}"
                             placeholder="cth: 08123456789"
-                            class="form-input @error('no_telepon') border-red-400 @enderror">
+                            class="form-input {{ $errors->has('no_telepon') ? 'is-invalid' : '' }}">
                         @error('no_telepon')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            <p class="form-error">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label class="form-label">Alamat</label>
-                        <textarea name="alamat" rows="3"
+                        <label class="form-label" for="alamat">Alamat</label>
+                        <textarea id="alamat" name="alamat" rows="3"
                             placeholder="Masukkan alamat lengkap"
-                            class="form-input @error('alamat') border-red-400 @enderror">{{ old('alamat', $employee->alamat) }}</textarea>
+                            class="form-textarea {{ $errors->has('alamat') ? 'is-invalid' : '' }}">{{ old('alamat', $employee->alamat) }}</textarea>
                         @error('alamat')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            <p class="form-error">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <div class="pt-2">
-                        <button type="submit"
-                            class="btn btn-primary">
+                    <div class="pt-1">
+                        <button type="submit" class="btn btn-primary">
                             Simpan Perubahan
                         </button>
                     </div>
@@ -170,9 +169,11 @@
             </div>
 
             {{-- Info: rekening penting untuk transfer gaji --}}
-            <div class="mt-4 bg-primary/5 border border-primary/20 rounded-lg px-4 py-3 text-sm text-primary">
-                <strong>ℹ️ Penting:</strong>
-                Pastikan nama bank dan nomor rekening Anda sudah benar. Data ini digunakan untuk proses transfer gaji setiap bulan.
+            <div class="alert alert-info mb-0">
+                <span class="alert-icon" aria-hidden="true">i</span>
+                <span>
+                    Nama bank dan nomor rekening digunakan untuk transfer gaji bulanan.
+                </span>
             </div>
         </div>
     </div>

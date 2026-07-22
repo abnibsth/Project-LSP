@@ -29,6 +29,8 @@ class SalaryComponent extends Model
 {
     use HasFactory;
 
+    protected $table = 'tunjangan_gaji';
+
     /**
      * Scope: hanya ambil komponen yang masih aktif.
      *

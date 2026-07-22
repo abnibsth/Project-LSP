@@ -3,19 +3,26 @@
 @section('title', 'Buat Periode Payroll')
 
 @section('content')
-    <div class="mb-6">
-        <a href="{{ route('admin.payroll.index') }}" class="text-sm text-ink-muted-48 hover:text-ink-muted-80">← Kembali ke Payroll</a>
-        <h1 class="page-title mt-2">Buat Periode Payroll Baru</h1>
+    {{--
+        FUNGSI HALAMAN INI:
+        Membuat periode payroll (bulan + tahun).
+        Setelah dibuat, admin masih harus klik Proses Payroll
+        di halaman daftar agar gaji dihitung otomatis.
+    --}}
+
+    <div class="page-header">
+        <a href="{{ route('admin.payroll.index') }}" class="back-link">← Kembali ke Payroll</a>
+        <h1 class="page-title">Buat Periode Payroll Baru</h1>
     </div>
 
-    <div class="max-w-md bg-white rounded-xl border border-hairline shadow-sm p-6">
+    <div class="ui-card ui-card-pad max-w-md">
         <form method="POST" action="{{ route('admin.payroll.store') }}" class="space-y-4">
             @csrf
 
             <div>
-                <label class="form-label">Bulan</label>
-                <select name="bulan" required
-                    class="form-input {{ $errors->has('bulan') ? 'border-red-400' : '' }}">
+                <label class="form-label" for="bulan">Bulan</label>
+                <select id="bulan" name="bulan" required
+                    class="form-select {{ $errors->has('bulan') ? 'is-invalid' : '' }}">
                     <option value="">Pilih Bulan</option>
                     @foreach(range(1, 12) as $m)
                         <option value="{{ $m }}" {{ old('bulan') == $m ? 'selected' : '' }}>
@@ -23,32 +30,28 @@
                         </option>
                     @endforeach
                 </select>
-                @error('bulan')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+                @error('bulan')<p class="form-error">{{ $message }}</p>@enderror
             </div>
 
             <div>
-                <label class="form-label">Tahun</label>
-                <select name="tahun" required
-                    class="form-input">
+                <label class="form-label" for="tahun">Tahun</label>
+                <select id="tahun" name="tahun" required class="form-select">
                     @foreach(range(date('Y'), date('Y') - 3) as $y)
                         <option value="{{ $y }}" {{ old('tahun', date('Y')) == $y ? 'selected' : '' }}>{{ $y }}</option>
                     @endforeach
                 </select>
             </div>
 
-            <div class="bg-primary/5 border border-primary/20 rounded-lg p-3 text-sm text-primary">
-                ℹ️ Setelah periode dibuat, klik <strong>Proses Payroll</strong> untuk menghitung gaji semua karyawan aktif secara otomatis.
+            <div class="alert alert-info mb-0">
+                <span class="alert-icon" aria-hidden="true">i</span>
+                <span>
+                    Setelah periode dibuat, klik <strong>Proses Payroll</strong> untuk menghitung gaji karyawan aktif.
+                </span>
             </div>
 
-            <div class="flex gap-3">
-                <button type="submit"
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2.5 rounded-lg text-sm">
-                    Buat Periode
-                </button>
-                <a href="{{ route('admin.payroll.index') }}"
-                    class="text-ink-muted-80 hover:text-ink px-5 py-2.5 rounded-lg text-sm border border-hairline">
-                    Batal
-                </a>
+            <div class="flex flex-wrap gap-2.5 pt-1">
+                <button type="submit" class="btn btn-primary">Buat Periode</button>
+                <a href="{{ route('admin.payroll.index') }}" class="btn btn-ghost">Batal</a>
             </div>
         </form>
     </div>

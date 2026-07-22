@@ -28,6 +28,8 @@ class AttendanceRule extends Model
 {
     use HasFactory;
 
+    protected $table = 'rules_absen';
+
     /**
      * Cast tipe data.
      *

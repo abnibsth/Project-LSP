@@ -35,6 +35,8 @@ class Employee extends Model
 {
     use HasFactory;
 
+    protected $table = 'karyawan';
+
     /**
      * Relasi: Karyawan PUNYA SATU akun user (untuk login).
      * belongsTo = "Employee ada di dalam User"

@@ -13,7 +13,7 @@
         </p>
     </div>
 
-    <form method="GET" class="ui-card p-4 mb-4 flex flex-wrap gap-3 items-end">
+    <form method="GET" class="filter-bar !items-end">
         <div>
             <label class="form-label">Tanggal Mulai</label>
             <input type="date" name="tanggal_mulai" value="{{ $tanggalMulai }}" class="form-input">

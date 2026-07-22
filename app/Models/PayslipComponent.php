@@ -30,6 +30,8 @@ class PayslipComponent extends Model
 {
     use HasFactory;
 
+    protected $table = 'komponen_gaji';
+
     /**
      * Relasi: Komponen ini BAGIAN DARI satu slip gaji.
      */

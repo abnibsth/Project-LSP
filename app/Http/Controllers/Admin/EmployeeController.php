@@ -73,7 +73,7 @@ class EmployeeController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'nik' => ['required', 'numeric', 'digits:16', 'regex:/^317/', 'unique:employees,nik'],
+            'nik' => ['required', 'numeric', 'digits:16', 'regex:/^317/', 'unique:karyawan,nik'],
             'nama' => ['required', 'string', 'max:100'],
             'email' => ['required', 'email', 'unique:users,email'],
             'jabatan' => ['required', 'string', 'max:100'],
@@ -134,7 +134,7 @@ class EmployeeController extends Controller
     public function update(Request $request, Employee $employee): RedirectResponse
     {
         $validated = $request->validate([
-            'nik' => ['required', 'numeric', 'digits:16', 'regex:/^317/', 'unique:employees,nik,'.$employee->id],
+            'nik' => ['required', 'numeric', 'digits:16', 'regex:/^317/', 'unique:karyawan,nik,'.$employee->id],
             'nama' => ['required', 'string', 'max:100'],
             'jabatan' => ['required', 'string', 'max:100'],
             'departemen' => ['required', 'string', 'max:100'],

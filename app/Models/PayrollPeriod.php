@@ -30,6 +30,8 @@ class PayrollPeriod extends Model
 {
     use HasFactory;
 
+    protected $table = 'priode_payroll';
+
     /**
      * Relasi: Periode ini punya banyak slip gaji (satu per karyawan).
      */

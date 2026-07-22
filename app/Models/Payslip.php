@@ -38,6 +38,8 @@ class Payslip extends Model
 {
     use HasFactory;
 
+    protected $table = 'gaji';
+
     /**
      * Relasi: Slip gaji ini MILIK satu karyawan.
      */

@@ -11,7 +11,7 @@
         <a href="{{ route('admin.karyawan.create') }}" class="btn btn-primary self-start">+ Tambah Karyawan</a>
     </div>
 
-    <form method="GET" class="ui-card p-4 mb-4 flex flex-wrap gap-3 items-center">
+    <form method="GET" class="filter-bar">
         <input type="text" name="cari" value="{{ request('cari') }}" placeholder="Cari nama atau NIK..."
             class="form-input w-full sm:w-56">
         <select name="departemen" class="form-select w-full sm:w-auto">
@@ -70,7 +70,7 @@
                             </span>
                         </td>
                         <td>
-                            <div class="flex gap-1.5 justify-center items-center">
+                            <div class="action-group">
                                 <a href="{{ route('admin.karyawan.show', $employee) }}" class="btn btn-action-soft">Detail</a>
                                 <a href="{{ route('admin.karyawan.edit', $employee) }}" class="btn btn-muted-soft">Edit</a>
                                 @if($employee->is_aktif)
@@ -84,7 +84,7 @@
                                         onsubmit="return confirm('Aktifkan kembali {{ $employee->nama }}?')" class="m-0 p-0 flex">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-action-soft !bg-green-50 !text-green-700">Aktifkan</button>
+                                        <button type="submit" class="btn btn-success-soft">Aktifkan</button>
                                     </form>
                                 @endif
                             </div>

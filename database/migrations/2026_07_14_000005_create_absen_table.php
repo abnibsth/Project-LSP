@@ -22,8 +22,8 @@ return new class extends Migration
         Schema::create('absen', function (Blueprint $table) {
             $table->id();
 
-            // Karyawan yang absen (FK ke tabel employees)
-            $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete();
+            // Karyawan yang absen (FK ke tabel karyawan)
+            $table->foreignId('employee_id')->constrained('karyawan')->cascadeOnDelete();
 
             // Tanggal absensi (misal: 2026-07-14)
             $table->date('tanggal');

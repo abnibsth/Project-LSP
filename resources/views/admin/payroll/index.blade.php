@@ -45,19 +45,19 @@
                             @endif
                         </td>
                         <td>
-                            <div class="flex gap-1.5 justify-center items-center">
+                            <div class="action-group">
                                 <a href="{{ route('admin.payroll.show', $periode) }}" class="btn btn-action-soft">Detail</a>
                                 @if(!$periode->isFinal())
                                     <form method="POST" action="{{ route('admin.payroll.proses', $periode) }}"
                                         onsubmit="return confirm('Proses payroll untuk {{ $periode->label }}?')" class="m-0 p-0 flex">
                                         @csrf
-                                        <button type="submit" class="btn btn-muted-soft !bg-violet-50 !text-violet-700">Proses</button>
+                                        <button type="submit" class="btn btn-violet-soft">Proses</button>
                                     </form>
                                     @if($periode->payslips->count() > 0)
                                         <form method="POST" action="{{ route('admin.payroll.finalisasi', $periode) }}"
                                             onsubmit="return confirm('Finalisasi payroll {{ $periode->label }}? Data akan dikunci!')" class="m-0 p-0 flex">
                                             @csrf
-                                            <button type="submit" class="btn btn-action-soft !bg-green-50 !text-green-700">Finalisasi</button>
+                                            <button type="submit" class="btn btn-success-soft">Finalisasi</button>
                                         </form>
                                     @endif
                                 @endif

@@ -8,41 +8,41 @@
         <p class="page-subtitle">Selamat datang, {{ auth()->user()->name }}. Ringkasan operasional hari ini.</p>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5 mb-6">
         <div class="stat-card">
             <div class="flex items-center justify-between gap-3">
                 <div>
-                    <p class="text-[11px] font-semibold text-ink-muted-48 uppercase tracking-widest">Karyawan Aktif</p>
-                    <p class="text-3xl font-semibold text-ink mt-1 tracking-tight">{{ $totalKaryawan }}</p>
+                    <p class="section-label">Karyawan Aktif</p>
+                    <p class="text-[1.75rem] font-semibold text-ink mt-1.5 tracking-tight tabular-nums">{{ $totalKaryawan }}</p>
                 </div>
-                <div class="stat-icon"><i class="flaticon-025-members"></i></div>
+                <div class="stat-icon"><i data-lucide="users" class="ui-icon" aria-hidden="true"></i></div>
             </div>
         </div>
 
         <div class="stat-card">
             <div class="flex items-center justify-between gap-3">
                 <div>
-                    <p class="text-[11px] font-semibold text-ink-muted-48 uppercase tracking-widest">Hadir Hari Ini</p>
-                    <p class="text-3xl font-semibold text-primary mt-1 tracking-tight">{{ $hadirHariIni }}</p>
+                    <p class="section-label">Hadir Hari Ini</p>
+                    <p class="text-[1.75rem] font-semibold text-primary mt-1.5 tracking-tight tabular-nums">{{ $hadirHariIni }}</p>
                 </div>
-                <div class="stat-icon"><i class="flaticon-005-checklist"></i></div>
+                <div class="stat-icon is-success"><i data-lucide="clipboard-check" class="ui-icon" aria-hidden="true"></i></div>
             </div>
         </div>
 
         <div class="stat-card">
             <div class="flex items-center justify-between gap-3">
                 <div>
-                    <p class="text-[11px] font-semibold text-ink-muted-48 uppercase tracking-widest">Alpha Hari Ini</p>
-                    <p class="text-3xl font-semibold text-red-600 mt-1 tracking-tight">{{ $alphaHariIni }}</p>
+                    <p class="section-label">Alpha Hari Ini</p>
+                    <p class="text-[1.75rem] font-semibold text-red-600 mt-1.5 tracking-tight tabular-nums">{{ $alphaHariIni }}</p>
                 </div>
-                <div class="stat-icon !text-red-600"><i class="flaticon-010-delete"></i></div>
+                <div class="stat-icon is-danger"><i data-lucide="user-x" class="ui-icon" aria-hidden="true"></i></div>
             </div>
         </div>
 
         <div class="stat-card">
             <div class="flex items-center justify-between gap-3">
                 <div class="min-w-0">
-                    <p class="text-[11px] font-semibold text-ink-muted-48 uppercase tracking-widest">Periode Payroll</p>
+                    <p class="section-label">Periode Payroll</p>
                     <p class="text-base font-semibold text-ink mt-2 truncate">
                         @if($periodeAktif)
                             {{ $periodeAktif->label }}
@@ -56,7 +56,7 @@
                         </span>
                     @endif
                 </div>
-                <div class="stat-icon"><i class="flaticon-003-calendar"></i></div>
+                <div class="stat-icon"><i data-lucide="calendar-days" class="ui-icon" aria-hidden="true"></i></div>
             </div>
         </div>
     </div>
@@ -64,10 +64,10 @@
     <div class="ui-card ui-card-pad mb-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
             <div>
-                <h2 class="typography-body-strong text-ink">Pengeluaran Gaji Bulanan</h2>
-                <p class="text-xs text-ink-muted-48 mt-0.5">Total gaji bersih (take-home pay) 6 periode terakhir</p>
+                <h2 class="section-title">Pengeluaran Gaji Bulanan</h2>
+                <p class="text-xs text-ink-muted-48 mt-1">Total gaji bersih 6 periode terakhir</p>
             </div>
-            <div class="badge badge-muted self-start">Rupiah (IDR)</div>
+            <div class="badge badge-muted self-start">IDR</div>
         </div>
 
         @if($hasPayrollData)
@@ -75,19 +75,17 @@
                 <canvas id="chartGaji"></canvas>
             </div>
         @else
-            <div class="min-h-[280px] flex items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-gray-50/70 px-6 text-center">
-                <div class="max-w-md">
-                    <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-primary shadow-sm">
-                        <i class="flaticon-040-stats text-xl"></i>
-                    </div>
-                    <h3 class="text-base font-semibold text-ink">Belum ada data pengeluaran gaji</h3>
-                    <p class="mt-2 text-sm text-ink-muted-48 leading-relaxed">
-                        Statistik pengeluaran akan muncul setelah periode payroll diproses dan difinalisasi.
-                    </p>
-                    <a href="{{ route('admin.payroll.create') }}" class="btn-primary inline-flex mt-4">
-                        Buat Periode Payroll
-                    </a>
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i data-lucide="chart-column" class="ui-icon" aria-hidden="true"></i>
                 </div>
+                <h3 class="empty-state-title">Belum ada data pengeluaran gaji</h3>
+                <p class="empty-state-text">
+                    Statistik muncul setelah periode payroll diproses dan difinalisasi.
+                </p>
+                <a href="{{ route('admin.payroll.create') }}" class="btn btn-primary">
+                    Buat Periode Payroll
+                </a>
             </div>
         @endif
     </div>
@@ -98,7 +96,7 @@
             document.addEventListener('DOMContentLoaded', function () {
                 const ctx = document.getElementById('chartGaji').getContext('2d');
                 const gradient = ctx.createLinearGradient(0, 0, 0, 260);
-                gradient.addColorStop(0, 'rgba(0, 102, 204, 0.18)');
+                gradient.addColorStop(0, 'rgba(0, 102, 204, 0.14)');
                 gradient.addColorStop(1, 'rgba(0, 102, 204, 0.0)');
 
                 new Chart(ctx, {
@@ -116,8 +114,8 @@
                             pointBackgroundColor: '#0066cc',
                             pointBorderColor: '#ffffff',
                             pointBorderWidth: 2,
-                            pointRadius: 4,
-                            pointHoverRadius: 6,
+                            pointRadius: 3.5,
+                            pointHoverRadius: 5.5,
                         }]
                     },
                     options: {
@@ -144,9 +142,9 @@
                             y: {
                                 beginAtZero: true,
                                 border: { display: false },
-                                grid: { color: '#f0f0f0' },
+                                grid: { color: '#f0f0f2' },
                                 ticks: {
-                                    color: '#7a7a7a',
+                                    color: '#6e6e73',
                                     font: { size: 11 },
                                     callback: function (value) {
                                         if (value >= 1000000) {
@@ -159,7 +157,7 @@
                             x: {
                                 border: { display: false },
                                 grid: { display: false },
-                                ticks: { color: '#7a7a7a', font: { size: 11 } }
+                                ticks: { color: '#6e6e73', font: { size: 11 } }
                             }
                         }
                     }
@@ -169,22 +167,22 @@
     @endif
 
     <div class="ui-card ui-card-pad">
-        <h2 class="typography-body-strong text-ink mb-4">Aksi Cepat</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+        <h2 class="section-title mb-4">Aksi Cepat</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
             <a href="{{ route('admin.karyawan.create') }}" class="quick-action">
-                <i class="flaticon-008-create-account text-xl text-primary"></i>
+                <span class="quick-action-icon"><i data-lucide="user-plus" class="ui-icon" aria-hidden="true"></i></span>
                 <span class="text-xs font-semibold text-ink">Tambah Karyawan</span>
             </a>
             <a href="{{ route('admin.payroll.create') }}" class="quick-action">
-                <i class="flaticon-032-refresh-page text-xl text-primary"></i>
+                <span class="quick-action-icon"><i data-lucide="calculator" class="ui-icon" aria-hidden="true"></i></span>
                 <span class="text-xs font-semibold text-ink">Buat Periode Payroll</span>
             </a>
             <a href="{{ route('admin.absensi.index') }}" class="quick-action">
-                <i class="flaticon-012-file-explorer text-xl text-primary"></i>
+                <span class="quick-action-icon"><i data-lucide="clipboard-list" class="ui-icon" aria-hidden="true"></i></span>
                 <span class="text-xs font-semibold text-ink">Lihat Absensi</span>
             </a>
             <a href="{{ route('admin.laporan.payroll') }}" class="quick-action">
-                <i class="flaticon-040-stats text-xl text-primary"></i>
+                <span class="quick-action-icon"><i data-lucide="chart-column" class="ui-icon" aria-hidden="true"></i></span>
                 <span class="text-xs font-semibold text-ink">Laporan Payroll</span>
             </a>
         </div>
