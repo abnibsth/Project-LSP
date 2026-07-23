@@ -130,7 +130,7 @@
                 </div>
             </header>
 
-            <main id="page-content" class="flex-1 p-5 md:p-8 overflow-y-auto scroll-soft bg-canvas-parchment">
+            <main id="page-content" class="flex-1 p-4 sm:p-5 md:p-8 overflow-y-auto scroll-soft bg-canvas-parchment">
                 @if(session('success'))
                     <div class="alert alert-success" role="status">
                         <span class="alert-icon" aria-hidden="true">✓</span>

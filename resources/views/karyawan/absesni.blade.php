@@ -10,33 +10,33 @@
 
     <div class="ui-card ui-card-pad mb-6 text-center">
         <p class="text-sm font-medium text-ink-muted-48">{{ now()->translatedFormat('l, d F Y') }}</p>
-        <p class="text-5xl font-semibold text-ink mt-2 tracking-tight tabular-nums" id="jam-sekarang">{{ now()->format('H:i:s') }}</p>
-        <p class="mt-3 text-sm text-ink-muted-48">
+        <p class="text-4xl sm:text-5xl font-semibold text-ink mt-2 tracking-tight tabular-nums" id="jam-sekarang">{{ now()->format('H:i:s') }}</p>
+        <p class="mt-3 text-sm text-ink-muted-48 px-1">
             Jam Kerja: {{ $rule->jam_masuk }} — {{ $rule->jam_keluar }}
             (Toleransi {{ $rule->toleransi_menit }} menit)
         </p>
 
-        <div class="mt-6 flex flex-wrap gap-3 justify-center items-center">
+        <div class="mt-6 flex flex-col sm:flex-row flex-wrap gap-3 justify-center items-stretch sm:items-center">
             @if(!$absensiHariIni)
-                <form method="POST" action="{{ route('karyawan.absensi.checkin') }}" id="form-checkin">
+                <form method="POST" action="{{ route('karyawan.absensi.checkin') }}" id="form-checkin" class="w-full sm:w-auto">
                     @csrf
-                    <button type="submit" id="btn-checkin" class="btn btn-primary !px-8 !py-3 !text-base">
+                    <button type="submit" id="btn-checkin" class="btn btn-primary w-full sm:w-auto !px-8 !py-3 !text-base">
                         Check-In Sekarang
                     </button>
                 </form>
             @elseif(!$absensiHariIni->waktu_checkout)
-                <div class="badge badge-success !px-4 !py-2 !text-sm">
+                <div class="badge badge-success !px-4 !py-2 !text-sm self-center">
                     Check-in: {{ $absensiHariIni->waktu_checkin->format('H:i') }}
                     · {{ ucfirst($absensiHariIni->status) }}
                 </div>
-                <form method="POST" action="{{ route('karyawan.absensi.checkout') }}" id="form-checkout">
+                <form method="POST" action="{{ route('karyawan.absensi.checkout') }}" id="form-checkout" class="w-full sm:w-auto">
                     @csrf
-                    <button type="submit" id="btn-checkout" class="btn btn-utility !px-8 !py-3 !text-base">
+                    <button type="submit" id="btn-checkout" class="btn btn-utility w-full sm:w-auto !px-8 !py-3 !text-base">
                         Check-Out
                     </button>
                 </form>
             @else
-                <div class="badge badge-primary !px-5 !py-2.5 !text-sm">
+                <div class="badge badge-primary !px-5 !py-2.5 !text-sm self-center text-center whitespace-normal">
                     Selesai — Masuk {{ $absensiHariIni->waktu_checkin->format('H:i') }}
                     · Pulang {{ $absensiHariIni->waktu_checkout->format('H:i') }}
                 </div>
@@ -44,19 +44,25 @@
         </div>
     </div>
 
-    <form method="GET" class="flex flex-wrap gap-3 mb-4 items-center">
-        <select name="bulan" class="form-select w-auto">
-            @foreach(range(1, 12) as $m)
-                <option value="{{ $m }}" {{ $bulan == $m ? 'selected' : '' }}>
-                    {{ \Carbon\Carbon::create(null, $m, 1)->translatedFormat('F') }}
-                </option>
-            @endforeach
-        </select>
-        <select name="tahun" class="form-select w-auto">
-            @foreach(range(date('Y'), date('Y') - 3) as $y)
-                <option value="{{ $y }}" {{ $tahun == $y ? 'selected' : '' }}>{{ $y }}</option>
-            @endforeach
-        </select>
+    <form method="GET" class="filter-bar">
+        <div class="w-full sm:w-auto">
+            <label class="form-label">Bulan</label>
+            <select name="bulan" class="form-select">
+                @foreach(range(1, 12) as $m)
+                    <option value="{{ $m }}" {{ $bulan == $m ? 'selected' : '' }}>
+                        {{ \Carbon\Carbon::create(null, $m, 1)->translatedFormat('F') }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div class="w-full sm:w-auto">
+            <label class="form-label">Tahun</label>
+            <select name="tahun" class="form-select">
+                @foreach(range(date('Y'), date('Y') - 3) as $y)
+                    <option value="{{ $y }}" {{ $tahun == $y ? 'selected' : '' }}>{{ $y }}</option>
+                @endforeach
+            </select>
+        </div>
         <button type="submit" class="btn btn-primary btn-sm">Filter</button>
     </form>
 

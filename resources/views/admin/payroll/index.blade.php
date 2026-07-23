@@ -45,19 +45,25 @@
                             @endif
                         </td>
                         <td>
+                            {{--
+                                Aksi tabel:
+                                Detail     = soft primary (navigasi)
+                                Proses     = soft primary (hitung ulang)
+                                Finalisasi = soft muted/ink (aksi serius, bukan hijau rayakan)
+                            --}}
                             <div class="action-group">
                                 <a href="{{ route('admin.payroll.show', $periode) }}" class="btn btn-action-soft">Detail</a>
                                 @if(!$periode->isFinal())
                                     <form method="POST" action="{{ route('admin.payroll.proses', $periode) }}"
                                         onsubmit="return confirm('Proses payroll untuk {{ $periode->label }}?')" class="m-0 p-0 flex">
                                         @csrf
-                                        <button type="submit" class="btn btn-violet-soft">Proses</button>
+                                        <button type="submit" class="btn btn-action-soft">Proses</button>
                                     </form>
                                     @if($periode->payslips->count() > 0)
                                         <form method="POST" action="{{ route('admin.payroll.finalisasi', $periode) }}"
                                             onsubmit="return confirm('Finalisasi payroll {{ $periode->label }}? Data akan dikunci!')" class="m-0 p-0 flex">
                                             @csrf
-                                            <button type="submit" class="btn btn-success-soft">Finalisasi</button>
+                                            <button type="submit" class="btn btn-muted-soft">Finalisasi</button>
                                         </form>
                                     @endif
                                 @endif

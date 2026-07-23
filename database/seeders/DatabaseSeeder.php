@@ -187,14 +187,30 @@ class DatabaseSeeder extends Seeder
                 'is_aktif' => true,
                 'keterangan' => 'Tunjangan uang makan per bulan',
             ],
-            // Potongan — mengurangi gaji
+            // Potongan — mengurangi gaji (persentase dari gaji pokok)
             [
-                'nama_komponen' => 'Kasbon / Pinjaman',
+                'nama_komponen' => 'BPJS Kesehatan',
                 'tipe' => 'potongan',
-                'jenis_nilai' => 'nominal',
-                'nilai' => 0, // diinput manual per karyawan saat payroll
+                'jenis_nilai' => 'persentase',
+                'nilai' => 1,
                 'is_aktif' => true,
-                'keterangan' => 'Potongan kasbon atau pinjaman karyawan',
+                'keterangan' => 'Potongan BPJS Kesehatan 1% dari gaji pokok',
+            ],
+            [
+                'nama_komponen' => 'BPJS Ketenagakerjaan',
+                'tipe' => 'potongan',
+                'jenis_nilai' => 'persentase',
+                'nilai' => 3,
+                'is_aktif' => true,
+                'keterangan' => 'Potongan BPJS Ketenagakerjaan 3% dari gaji pokok',
+            ],
+            [
+                'nama_komponen' => 'Potongan Pajak PPh 21',
+                'tipe' => 'potongan',
+                'jenis_nilai' => 'persentase',
+                'nilai' => 1,
+                'is_aktif' => true,
+                'keterangan' => 'Potongan Pajak PPh 21 1% dari gaji pokok',
             ],
         ];
 
@@ -204,6 +220,10 @@ class DatabaseSeeder extends Seeder
                 $komponen
             );
         }
+
+        // Nonaktifkan potongan kasbon lama jika masih ada di database
+        SalaryComponent::where('nama_komponen', 'Kasbon / Pinjaman')
+            ->update(['is_aktif' => false]);
 
         // =============================================
         // 4. BUAT ATURAN ABSENSI DEFAULT

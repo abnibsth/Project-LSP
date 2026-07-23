@@ -10,18 +10,16 @@
         tanpa harus load semua data absensi (lebih efisien di database).
     --}}
 
-    <div class="flex items-center justify-between mb-6">
-        <div>
-            <h1 class="page-title">Laporan Absensi</h1>
-            <p class="page-subtitle">Rekap kehadiran karyawan per bulan.</p>
-        </div>
+    <div class="page-header">
+        <h1 class="page-title">Laporan Absensi</h1>
+        <p class="page-subtitle">Rekap kehadiran karyawan per bulan.</p>
     </div>
 
     {{-- Filter Bulan & Tahun --}}
-    <form method="GET" class="bg-white rounded-xl border border-hairline p-4 shadow-sm mb-6 flex flex-wrap gap-3 items-end">
-        <div>
+    <form method="GET" class="filter-bar">
+        <div class="w-full sm:w-auto">
             <label class="form-label">Bulan</label>
-            <select name="bulan" class="form-input">
+            <select name="bulan" class="form-select">
                 @for($i = 1; $i <= 12; $i++)
                     <option value="{{ $i }}" {{ $bulan == $i ? 'selected' : '' }}>
                         {{ \Carbon\Carbon::create()->month($i)->translatedFormat('F') }}
@@ -29,66 +27,64 @@
                 @endfor
             </select>
         </div>
-        <div>
+        <div class="w-full sm:w-auto">
             <label class="form-label">Tahun</label>
-            <select name="tahun" class="form-input">
+            <select name="tahun" class="form-select">
                 @for($y = now()->year; $y >= 2020; $y--)
                     <option value="{{ $y }}" {{ $tahun == $y ? 'selected' : '' }}>{{ $y }}</option>
                 @endfor
             </select>
         </div>
-        <button type="submit" class="bg-canvas-parchment hover:bg-divider-soft text-ink-muted-80 px-4 py-2 rounded-lg text-sm">
-            Tampilkan
-        </button>
+        <button type="submit" class="btn btn-ghost">Tampilkan</button>
     </form>
 
-    {{-- Tabel Rekap Absensi Per Karyawan --}}
-    <div class="bg-white rounded-xl border border-hairline shadow-sm overflow-hidden">
-        <div class="px-6 py-4 border-b border-divider-soft">
-            <h2 class="font-semibold text-ink">
+    {{-- Tabel Rekap Absensi Per Karyawan — scroll di HP --}}
+    <div class="ui-table-wrap">
+        <div class="ui-card-header">
+            <h2 class="section-title">
                 Rekap Kehadiran — {{ \Carbon\Carbon::create()->month($bulan)->translatedFormat('F') }} {{ $tahun }}
             </h2>
         </div>
-        <table class="w-full text-sm">
-            <thead class="bg-canvas-parchment text-ink-muted-48 uppercase text-xs">
+        <table class="ui-table">
+            <thead>
                 <tr>
-                    <th class="px-6 py-3 text-left">Karyawan</th>
-                    <th class="px-6 py-3 text-left">Departemen</th>
+                    <th>Karyawan</th>
+                    <th>Departemen</th>
                     {{-- Kolom ini diisi dari withCount() di controller --}}
-                    <th class="px-6 py-3 text-center">✅ Hadir</th>
-                    <th class="px-6 py-3 text-center">⏰ Telat</th>
-                    <th class="px-6 py-3 text-center">❌ Alpha</th>
-                    <th class="px-6 py-3 text-center">Total Kehadiran</th>
+                    <th class="!text-center">Hadir</th>
+                    <th class="!text-center">Telat</th>
+                    <th class="!text-center">Alpha</th>
+                    <th class="!text-center">Total Kehadiran</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-divider-soft">
+            <tbody>
                 @forelse($employees as $emp)
-                    <tr class="hover:bg-canvas-parchment">
-                        <td class="px-6 py-3">
+                    <tr>
+                        <td>
                             <p class="font-medium text-ink">{{ $emp->nama }}</p>
                             <p class="text-xs text-ink-muted-48 font-mono">{{ $emp->nik }}</p>
                         </td>
-                        <td class="px-6 py-3 text-ink-muted-80">{{ $emp->departemen }}</td>
-                        <td class="px-6 py-3 text-center">
+                        <td class="text-ink-muted-80">{{ $emp->departemen }}</td>
+                        <td class="text-center">
                             {{-- total_hadir adalah hasil withCount() di controller --}}
-                            <span class="font-medium text-green-600">{{ $emp->total_hadir }}</span>
+                            <span class="font-medium text-emerald-700 tabular-nums">{{ $emp->total_hadir }}</span>
                         </td>
-                        <td class="px-6 py-3 text-center">
-                            <span class="font-medium text-yellow-600">{{ $emp->total_telat }}</span>
+                        <td class="text-center">
+                            <span class="font-medium text-amber-600 tabular-nums">{{ $emp->total_telat }}</span>
                         </td>
-                        <td class="px-6 py-3 text-center">
-                            <span class="font-medium text-red-600">{{ $emp->total_alpha }}</span>
+                        <td class="text-center">
+                            <span class="font-medium text-red-600 tabular-nums">{{ $emp->total_alpha }}</span>
                         </td>
-                        <td class="px-6 py-3 text-center">
+                        <td class="text-center">
                             {{-- Total kehadiran = hadir + telat (keduanya masuk kerja, hanya beda waktu) --}}
-                            <span class="font-bold text-ink">
+                            <span class="font-semibold text-ink tabular-nums">
                                 {{ $emp->total_hadir + $emp->total_telat }} hari
                             </span>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-10 text-center text-ink-muted-48">
+                        <td colspan="6" class="empty-cell">
                             Tidak ada data karyawan aktif.
                         </td>
                     </tr>

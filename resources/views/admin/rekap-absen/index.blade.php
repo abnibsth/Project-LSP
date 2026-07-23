@@ -13,18 +13,18 @@
         </p>
     </div>
 
-    <form method="GET" class="filter-bar !items-end">
-        <div>
+    <form method="GET" class="filter-bar">
+        <div class="w-full sm:w-auto">
             <label class="form-label">Tanggal Mulai</label>
             <input type="date" name="tanggal_mulai" value="{{ $tanggalMulai }}" class="form-input">
         </div>
-        <div>
+        <div class="w-full sm:w-auto">
             <label class="form-label">Tanggal Selesai</label>
             <input type="date" name="tanggal_selesai" value="{{ $tanggalSelesai }}" class="form-input">
         </div>
-        <div>
+        <div class="w-full sm:w-auto sm:min-w-48">
             <label class="form-label">Karyawan</label>
-            <select name="employee_id" class="form-select w-48">
+            <select name="employee_id" class="form-select">
                 <option value="">Semua Karyawan</option>
                 @foreach($employees as $emp)
                     <option value="{{ $emp->id }}" {{ request('employee_id') == $emp->id ? 'selected' : '' }}>
@@ -33,7 +33,7 @@
                 @endforeach
             </select>
         </div>
-        <div>
+        <div class="w-full sm:w-auto">
             <label class="form-label">Status</label>
             <select name="status" class="form-select">
                 <option value="">Semua Status</option>
@@ -42,8 +42,10 @@
                 <option value="alpha" {{ request('status') === 'alpha' ? 'selected' : '' }}>Alpha</option>
             </select>
         </div>
-        <button type="submit" class="btn btn-ghost">Filter</button>
-        <a href="{{ route('admin.absensi.index') }}" class="text-sm text-ink-muted-48 hover:text-ink px-2 py-2">Reset</a>
+        <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+            <button type="submit" class="btn btn-ghost">Filter</button>
+            <a href="{{ route('admin.absensi.index') }}" class="text-sm text-ink-muted-48 hover:text-ink px-2 py-2">Reset</a>
+        </div>
     </form>
 
     <div class="ui-table-wrap">

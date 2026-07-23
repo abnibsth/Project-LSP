@@ -11,21 +11,21 @@
         - Daftar slip gaji
     --}}
 
-    <div class="mb-6 flex items-center justify-between">
-        <div>
+    <div class="page-toolbar">
+        <div class="min-w-0">
             <a href="{{ route('admin.karyawan.index') }}" class="back-link">← Kembali ke Daftar Karyawan</a>
             <h1 class="page-title">{{ $employee->nama }}</h1>
             <p class="page-subtitle font-mono">NIK: {{ $employee->nik }}</p>
         </div>
-        <div class="flex flex-wrap gap-2">
-            <a href="{{ route('admin.karyawan.edit', $employee) }}" class="btn btn-ghost">
+        <div class="flex flex-col sm:flex-row flex-wrap gap-2 w-full sm:w-auto">
+            <a href="{{ route('admin.karyawan.edit', $employee) }}" class="btn btn-ghost w-full sm:w-auto">
                 Edit Data
             </a>
             @if($employee->is_aktif)
                 <form method="POST" action="{{ route('admin.karyawan.nonaktifkan', $employee) }}"
-                    onsubmit="return confirm('Nonaktifkan {{ $employee->nama }}?')">
+                    onsubmit="return confirm('Nonaktifkan {{ $employee->nama }}?')" class="w-full sm:w-auto m-0">
                     @csrf
-                    <button type="submit" class="btn btn-danger-soft !px-3 !py-2 !text-xs">
+                    <button type="submit" class="btn btn-danger-soft !px-3 !py-2 !text-xs w-full sm:w-auto">
                         Nonaktifkan
                     </button>
                 </form>

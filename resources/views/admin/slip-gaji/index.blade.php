@@ -49,9 +49,19 @@
                             Rp {{ number_format($payslip->gaji_bersih, 0, ',', '.') }}
                         </td>
                         <td>
-                            <div class="flex gap-1.5 justify-center items-center">
+                            {{--
+                                Aksi tabel:
+                                Detail = soft primary (navigasi)
+                                PDF    = soft muted (unduh, bukan hijau “success”)
+                            --}}
+                            <div class="action-group justify-center">
                                 <a href="{{ route('admin.slip-gaji.show', $payslip) }}" class="btn btn-action-soft">Detail</a>
-                                <a href="{{ route('admin.slip-gaji.download', $payslip) }}" class="btn btn-action-soft !bg-green-50 !text-green-700">PDF</a>
+                                <a href="{{ route('admin.slip-gaji.download', $payslip) }}"
+                                    class="btn btn-muted-soft js-file-download"
+                                    data-download="true"
+                                    download>
+                                    PDF
+                                </a>
                             </div>
                         </td>
                     </tr>

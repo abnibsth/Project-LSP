@@ -3,96 +3,108 @@
 @section('title', 'Detail Payroll ' . $payrollPeriod->label)
 
 @section('content')
-    <div class="mb-6">
-        <a href="{{ route('admin.payroll.index') }}" class="text-sm text-ink-muted-48 hover:text-ink-muted-80">← Kembali</a>
-        <div class="flex items-center justify-between mt-2">
-            <div>
+    {{--
+        Header + aksi payroll.
+        Proses  = hitung/ulang hitung gaji → tombol primary (aksi utama)
+        Finalisasi = kunci data permanen → tombol utility gelap (tegas, bukan hijau "rayakan")
+        Tanpa emoji / ungu / hijau flat biar tidak terasa AI-slop.
+    --}}
+    <div class="page-toolbar">
+        <div class="min-w-0">
+            <a href="{{ route('admin.payroll.index') }}" class="back-link">← Kembali ke daftar payroll</a>
+            <div class="flex flex-wrap items-center gap-2.5 mt-1">
                 <h1 class="page-title">Payroll: {{ $payrollPeriod->label }}</h1>
-                <span class="px-2.5 py-1 rounded-full text-xs font-medium
-                    {{ $payrollPeriod->status === 'final' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
-                    {{ $payrollPeriod->status === 'final' ? '🔒 Final' : '✏️ Draft' }}
+                <span class="badge {{ $payrollPeriod->status === 'final' ? 'badge-success' : 'badge-warning' }}">
+                    {{ $payrollPeriod->status === 'final' ? 'Final' : 'Draft' }}
                 </span>
             </div>
-            @if(!$payrollPeriod->isFinal())
-                <div class="flex gap-3">
-                    <form method="POST" action="{{ route('admin.payroll.proses', $payrollPeriod) }}"
-                        onsubmit="return confirm('Proses/hitung ulang payroll {{ $payrollPeriod->label }}?')">
+        </div>
+
+        @if(!$payrollPeriod->isFinal())
+            <div class="flex flex-wrap items-center gap-2 self-start">
+                <form method="POST" action="{{ route('admin.payroll.proses', $payrollPeriod) }}"
+                    onsubmit="return confirm('Proses/hitung ulang payroll {{ $payrollPeriod->label }}?')" class="m-0">
+                    @csrf
+                    <button type="submit" class="btn btn-primary">
+                        Proses Payroll
+                    </button>
+                </form>
+
+                @if($payrollPeriod->payslips->count() > 0)
+                    <form method="POST" action="{{ route('admin.payroll.finalisasi', $payrollPeriod) }}"
+                        onsubmit="return confirm('Finalisasi payroll {{ $payrollPeriod->label }}? Data akan dikunci permanen!')" class="m-0">
                         @csrf
-                        <button type="submit"
-                            class="bg-purple-600 hover:bg-purple-700 text-white font-medium px-4 py-2 rounded-lg text-sm">
-                            🔄 Proses Payroll
+                        <button type="submit" class="btn btn-utility">
+                            Finalisasi
                         </button>
                     </form>
-                    @if($payrollPeriod->payslips->count() > 0)
-                        <form method="POST" action="{{ route('admin.payroll.finalisasi', $payrollPeriod) }}"
-                            onsubmit="return confirm('Finalisasi payroll {{ $payrollPeriod->label }}? Data akan dikunci permanen!')">
-                            @csrf
-                            <button type="submit"
-                                class="bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded-lg text-sm">
-                                ✅ Finalisasi
-                            </button>
-                        </form>
-                    @endif
-                </div>
-            @endif
-        </div>
+                @endif
+            </div>
+        @endif
     </div>
 
-    {{-- Statistik Total --}}
+    {{-- Statistik Total — stack di HP, 3 kolom di tablet+ --}}
     @if($payrollPeriod->payslips->count() > 0)
-        <div class="grid grid-cols-3 gap-4 mb-6">
-            <div class="bg-white rounded-xl border border-hairline p-4 shadow-sm text-center">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
+            <div class="ui-card ui-card-pad text-center">
                 <p class="text-xs text-ink-muted-48">Total Karyawan</p>
-                <p class="page-title">{{ $payrollPeriod->payslips->count() }}</p>
+                <p class="text-2xl font-semibold text-ink mt-1 tabular-nums">{{ $payrollPeriod->payslips->count() }}</p>
             </div>
-            <div class="bg-white rounded-xl border border-hairline p-4 shadow-sm text-center">
+            <div class="ui-card ui-card-pad text-center">
                 <p class="text-xs text-ink-muted-48">Total Gaji Bruto</p>
-                <p class="text-xl font-bold text-ink">Rp {{ number_format($payrollPeriod->payslips->sum('gaji_bruto'), 0, ',', '.') }}</p>
+                <p class="text-lg sm:text-xl font-semibold text-ink mt-1 tabular-nums break-words">
+                    Rp {{ number_format($payrollPeriod->payslips->sum('gaji_bruto'), 0, ',', '.') }}
+                </p>
             </div>
-            <div class="bg-white rounded-xl border border-hairline p-4 shadow-sm text-center">
+            <div class="ui-card ui-card-pad text-center">
                 <p class="text-xs text-ink-muted-48">Total Gaji Bersih</p>
-                <p class="text-xl font-bold text-green-600">Rp {{ number_format($payrollPeriod->payslips->sum('gaji_bersih'), 0, ',', '.') }}</p>
+                <p class="text-lg sm:text-xl font-semibold text-emerald-700 mt-1 tabular-nums break-words">
+                    Rp {{ number_format($payrollPeriod->payslips->sum('gaji_bersih'), 0, ',', '.') }}
+                </p>
             </div>
         </div>
     @endif
 
-    {{-- Tabel Slip Gaji Per Karyawan --}}
-    <div class="bg-white rounded-xl border border-hairline shadow-sm overflow-hidden">
-        <div class="px-6 py-4 border-b border-divider-soft flex items-center justify-between">
-            <h2 class="font-semibold text-ink">Daftar Slip Gaji Karyawan</h2>
+    {{-- Tabel Slip Gaji Per Karyawan — scroll horizontal di HP --}}
+    <div class="ui-table-wrap">
+        <div class="ui-card-header">
+            <h2 class="section-title">Daftar Slip Gaji Karyawan</h2>
         </div>
-        <table class="w-full text-sm">
-            <thead class="bg-canvas-parchment text-ink-muted-48 uppercase text-xs">
+        <table class="ui-table">
+            <thead>
                 <tr>
-                    <th class="px-6 py-3 text-left">Karyawan</th>
-                    <th class="px-6 py-3 text-right">Gaji Bruto</th>
-                    <th class="px-6 py-3 text-right">Total Potongan</th>
-                    <th class="px-6 py-3 text-right">Gaji Bersih</th>
-                    <th class="px-6 py-3 text-center">Aksi</th>
+                    <th>Karyawan</th>
+                    <th class="!text-right">Gaji Bruto</th>
+                    <th class="!text-right">Total Potongan</th>
+                    <th class="!text-right">Gaji Bersih</th>
+                    <th class="!text-center">Aksi</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-divider-soft">
+            <tbody>
                 @forelse($payrollPeriod->payslips as $payslip)
-                    <tr class="hover:bg-canvas-parchment">
-                        <td class="px-6 py-3">
-                            <p class="font-medium">{{ $payslip->employee->nama }}</p>
+                    <tr>
+                        <td>
+                            <p class="font-medium text-ink">{{ $payslip->employee->nama }}</p>
                             <p class="text-xs text-ink-muted-48">{{ $payslip->employee->jabatan }} — {{ $payslip->employee->departemen }}</p>
                         </td>
-                        <td class="px-6 py-3 text-right">Rp {{ number_format($payslip->gaji_bruto, 0, ',', '.') }}</td>
-                        <td class="px-6 py-3 text-right text-red-600 font-medium">Rp {{ number_format($payslip->total_potongan, 0, ',', '.') }}</td>
-                        <td class="px-6 py-3 text-right font-bold text-green-700">Rp {{ number_format($payslip->gaji_bersih, 0, ',', '.') }}</td>
-                        <td class="px-6 py-3">
-                            <div class="flex gap-2 justify-center">
-                                <a href="{{ route('admin.slip-gaji.show', $payslip) }}"
-                                    class="text-primary hover:text-blue-800 text-xs font-medium">Detail</a>
+                        <td class="text-right tabular-nums">Rp {{ number_format($payslip->gaji_bruto, 0, ',', '.') }}</td>
+                        <td class="text-right text-red-600 font-medium tabular-nums">Rp {{ number_format($payslip->total_potongan, 0, ',', '.') }}</td>
+                        <td class="text-right font-semibold text-emerald-700 tabular-nums">Rp {{ number_format($payslip->gaji_bersih, 0, ',', '.') }}</td>
+                        <td>
+                            <div class="action-group justify-center">
+                                <a href="{{ route('admin.slip-gaji.show', $payslip) }}" class="btn btn-action-soft">Detail</a>
                                 <a href="{{ route('admin.slip-gaji.download', $payslip) }}"
-                                    class="text-ink-muted-80 hover:text-ink text-xs font-medium">PDF</a>
+                                    class="btn btn-muted-soft js-file-download"
+                                    data-download="true"
+                                    download>
+                                    PDF
+                                </a>
                             </div>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-10 text-center text-ink-muted-48">
+                        <td colspan="5" class="empty-cell">
                             Belum ada data. Klik "Proses Payroll" untuk menghitung gaji karyawan.
                         </td>
                     </tr>

@@ -60,7 +60,12 @@ class Slipgaji extends Controller
         $payslip->load(['employee', 'payrollPeriod', 'components']);
 
         $pdf = Pdf::loadView('payslips.pdf', compact('payslip'))
-            ->setPaper('a4', 'portrait');
+            ->setPaper('a4', 'portrait')
+            // DPI & remote: bantu render lebih stabil di DomPDF
+            ->setOption('dpi', 96)
+            ->setOption('defaultFont', 'DejaVu Sans')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isRemoteEnabled', false);
 
         $namaFile = 'slip-gaji-'.$payslip->employee->nik.'-'.$payslip->payrollPeriod->label.'.pdf';
         $namaFile = str_replace(' ', '-', strtolower($namaFile));

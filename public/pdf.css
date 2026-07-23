@@ -1,175 +1,329 @@
-@page { margin: 15px; }
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Helvetica', Arial, sans-serif; font-size: 8px; color: #000; line-height: 1.25; }
+/*
+ * Stylesheet PDF slip gaji — dioptimasi DomPDF.
+ *
+ * Penyebab potong kanan yang sering terjadi di DomPDF:
+ * 1. box-sizing sering diabaikan → width:100% + padding/border = overflow
+ * 2. white-space:nowrap di angka memaksa kolom melebar
+ * 3. nested table width % tidak dihitung ketat
+ *
+ * Solusi:
+ * - padding hanya di sel tabel, bukan di wrapper width 100%
+ * - table-layout: fixed
+ * - overflow-wrap / word-break di teks panjang
+ * - margin @page cukup longgar
+ */
 
-.border-container {
-    border: 2px solid #000;
-    padding: 10px;
+@page {
+    margin: 12mm 10mm;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: DejaVu Sans, Helvetica, Arial, sans-serif;
+    font-size: 8px;
+    color: #1d1d1f;
+    line-height: 1.3;
+}
+
+/* Wrapper tanpa width:100% + padding (itu yang bikin potong kanan) */
+.page {
+    border: 1px solid #1d1d1f;
+}
+
+.page-inner {
+    padding: 8px 8px 10px;
+}
+
+/* Header 2 kolom via table fixed */
+.header-table {
     width: 100%;
-    height: 785px; /* Ensures container spans the full page height */
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin: 0 0 6px 0;
+    border-bottom: 1px solid #1d1d1f;
 }
 
-.title-section {
-    text-align: center;
-    border-bottom: 2px solid #000;
-    padding-bottom: 6px;
-    margin-bottom: 8px;
+.header-table td {
+    border: none;
+    vertical-align: middle;
+    padding: 0 0 6px 0;
 }
-.title-section h1 {
-    font-size: 14px;
+
+.header-brand {
+    width: 40%;
+    text-align: left;
+}
+
+.header-brand img {
+    height: 24px;
+    width: auto;
+    max-width: 120px;
+}
+
+.header-brand-name {
+    font-size: 7.5px;
     font-weight: bold;
-    letter-spacing: 0.5px;
-    margin-bottom: 1px;
+    color: #0066cc;
+    margin-top: 2px;
 }
-.title-section p {
-    font-size: 10px;
+
+.header-title-wrap {
+    width: 60%;
+    text-align: right;
+}
+
+.header-title {
+    font-size: 11px;
+    font-weight: bold;
+    color: #1d1d1f;
+    line-height: 1.2;
+}
+
+.header-period {
+    font-size: 8px;
     font-weight: bold;
     text-transform: uppercase;
+    color: #424245;
+    margin-top: 2px;
+    line-height: 1.25;
 }
 
+/* Meta identitas — 6 kolom, fixed layout */
 .meta-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 8px;
+    table-layout: fixed;
+    margin: 0 0 6px 0;
 }
+
 .meta-table td {
-    padding: 3px 4px;
-    font-size: 8px;
-    border-bottom: 1px solid #eee;
+    padding: 2px 2px;
+    font-size: 7px;
+    border-bottom: 1px solid #e8e8ed;
+    vertical-align: top;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
+
 .meta-table td.label {
     font-weight: bold;
-    width: 15%;
-    color: #333;
+    width: 12%;
+    color: #6e6e73;
 }
+
 .meta-table td.colon {
     width: 2%;
     text-align: center;
-}
-.meta-table td.val {
-    width: 33%;
+    color: #6e6e73;
 }
 
-/* Layout Utama: Kiri Absensi, Kanan Rincian Gaji */
+.meta-table td.val {
+    width: 36%;
+    color: #1d1d1f;
+}
+
+/* Layout utama */
 .layout-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 8px;
-}
-.layout-table > tbody > tr > td {
-    vertical-align: top;
-    border: 1.5px solid #000;
+    table-layout: fixed;
+    margin: 0 0 6px 0;
 }
 
+.layout-table > tbody > tr > td {
+    vertical-align: top;
+    border: 1px solid #1d1d1f;
+}
+
+.col-attendance {
+    width: 50%;
+}
+
+.col-salary {
+    width: 50%;
+}
+
+/* Padding kolom gaji lewat nested table, bukan padding di td width% */
+.salary-pad {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.salary-pad > tbody > tr > td {
+    border: none;
+    padding: 5px 5px 6px;
+    vertical-align: top;
+}
+
+/* Absensi */
 .attendance-table {
     width: 100%;
     border-collapse: collapse;
-}
-.attendance-table th, .attendance-table td {
-    border: 1px solid #ccc;
-    padding: 3.5px 2px; /* Increased padding to stretch vertically and look cleaner */
-    font-size: 7.2px;
-    text-align: center;
-}
-.attendance-table th {
-    background: #e2e8f0;
-    font-weight: bold;
-    text-transform: uppercase;
-    padding: 4px 2px;
-}
-.attendance-table tr.weekend-row {
-    background: #f8fafc;
-    color: #64748b;
-}
-.attendance-table tr.alpha-row {
-    background: #fee2e2;
-    color: #ef4444;
+    table-layout: fixed;
 }
 
-.salary-column {
-    padding: 8px;
+.attendance-table th,
+.attendance-table td {
+    border: 1px solid #d2d2d7;
+    padding: 2px 1px;
+    font-size: 6.4px;
+    text-align: center;
+    word-wrap: break-word;
 }
-.salary-group-title {
-    background: #e2e8f0;
+
+.attendance-table th {
+    background: #f5f5f7;
     font-weight: bold;
-    padding: 3px 5px;
-    border: 1px solid #000;
-    margin-top: 30px; /* Increased margin to distribute content vertically and fill column height */
-    margin-bottom: 5px;
-    font-size: 8px;
     text-transform: uppercase;
+    color: #424245;
+    padding: 2.5px 1px;
 }
-.salary-group-title:first-child {
+
+.attendance-table tr.weekend-row {
+    background: #fafafa;
+    color: #6e6e73;
+}
+
+.attendance-table tr.alpha-row {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+/* Rincian gaji */
+.salary-group-title {
+    background: #f5f5f7;
+    font-weight: bold;
+    padding: 3px 4px;
+    border: 1px solid #1d1d1f;
+    margin: 6px 0 2px 0;
+    font-size: 7px;
+    text-transform: uppercase;
+    color: #1d1d1f;
+}
+
+.salary-group-title.first {
     margin-top: 0;
 }
+
 .salary-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 5px;
+    table-layout: fixed;
+    margin: 0 0 2px 0;
 }
+
 .salary-table td {
-    padding: 3.5px 4px; /* Increased cell padding in salary tables */
-    font-size: 7.8px;
-    border-bottom: 1px dashed #ccc;
+    padding: 2px 2px;
+    font-size: 7px;
+    border-bottom: 1px dashed #d2d2d7;
+    vertical-align: top;
+    word-wrap: break-word;
 }
+
+.salary-table td.desc {
+    width: 62%;
+}
+
 .salary-table td.amount {
+    width: 38%;
     text-align: right;
     font-weight: bold;
+    /* JANGAN nowrap — itu yang sering dorong overflow kanan DomPDF */
 }
+
 .salary-table tr.total-row td {
     font-weight: bold;
-    border-top: 1px solid #000;
-    border-bottom: 1px solid #000;
-    background: #f8fafc;
+    border-top: 1px solid #1d1d1f;
+    border-bottom: 1px solid #1d1d1f;
+    background: #fafafa;
 }
 
+.amount-deduction {
+    color: #b91c1c;
+}
+
+/* Ringkasan */
 .summary-box {
-    border: 1px solid #000;
-    padding: 6px;
-    background: #f8fafc;
-    margin-top: 5px;
+    border: 1px solid #1d1d1f;
+    background: #fafafa;
+    margin-top: 2px;
 }
-.summary-row {
-    display: table;
+
+.summary-table {
     width: 100%;
-    margin-bottom: 3.5px;
-    font-size: 7.8px;
+    border-collapse: collapse;
+    table-layout: fixed;
 }
-.summary-row:last-child {
-    margin-bottom: 0;
-    font-weight: bold;
-    font-size: 8.5px;
-    border-top: 1px solid #000;
-    padding-top: 3px;
+
+.summary-table td {
+    border: none;
+    padding: 3px 4px;
+    font-size: 7px;
+    vertical-align: middle;
+    word-wrap: break-word;
 }
-.summary-label {
-    display: table-cell;
+
+.summary-table td.s-label {
+    width: 62%;
     text-align: left;
 }
-.summary-value {
-    display: table-cell;
+
+.summary-table td.s-value {
+    width: 38%;
     text-align: right;
+    font-weight: bold;
 }
 
+.summary-table tr.net td {
+    font-weight: bold;
+    font-size: 8px;
+    border-top: 1px solid #1d1d1f;
+    padding-top: 4px;
+}
+
+.summary-table tr.net td.s-value {
+    color: #0066cc;
+}
+
+/* Catatan & tanda tangan */
 .notes {
-    font-size: 7px;
-    color: #444;
-    border: 1px solid #ccc;
-    padding: 5px;
-    margin-top: 15px; /* Added spacing above the notes box */
-    margin-bottom: 10px;
+    font-size: 6.5px;
+    color: #6e6e73;
+    border: 1px solid #d2d2d7;
+    padding: 4px 5px;
+    margin: 6px 0;
+    line-height: 1.4;
 }
 
 .signature-table {
     width: 100%;
-    margin-top: 15px;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-top: 2px;
 }
+
 .signature-table td {
     text-align: center;
     width: 50%;
-    font-size: 8px;
+    font-size: 7.5px;
     vertical-align: bottom;
+    border: none;
+    color: #424245;
+    padding: 0 4px;
 }
+
 .signature-table td.space {
-    height: 38px;
+    height: 32px;
+}
+
+.signature-name {
+    text-decoration: underline;
+    font-weight: bold;
+    color: #1d1d1f;
+    font-size: 8px;
 }

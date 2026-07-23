@@ -12,23 +12,30 @@
         Admin juga bisa download PDF dari sini.
     --}}
 
-    <div class="mb-6 flex items-center justify-between">
-        <div>
-            <a href="{{ route('admin.slip-gaji.index') }}" class="text-sm text-ink-muted-48 hover:text-ink-muted-80">
-                ← Kembali ke Daftar Slip Gaji
+    {{--
+        Header + aksi download.
+        PDF = utilitas sekunder, bukan “tombol hijau rayakan”.
+        Pakai btn-utility (ink gelap) + Lucide, tanpa emoji.
+    --}}
+    <div class="page-toolbar">
+        <div class="min-w-0">
+            <a href="{{ route('admin.slip-gaji.index') }}" class="back-link">
+                ← Kembali ke daftar slip
             </a>
-            <h1 class="page-title mt-2">
+            <h1 class="page-title">
                 Slip Gaji — {{ $payslip->employee->nama }}
             </h1>
-            <p class="text-ink-muted-48 text-sm">
+            <p class="page-subtitle">
                 Periode: {{ $payslip->payrollPeriod->label }} ·
                 NIK: <span class="font-mono">{{ $payslip->employee->nik }}</span>
             </p>
         </div>
-        {{-- Tombol download PDF --}}
         <a href="{{ route('admin.slip-gaji.download', $payslip) }}"
-            class="bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2.5 rounded-lg text-sm transition-colors flex items-center gap-2">
-            ⬇️ Download PDF
+            class="btn btn-utility self-start shrink-0 js-file-download"
+            data-download="true"
+            download>
+            <i data-lucide="download" class="ui-icon ui-icon-sm" aria-hidden="true"></i>
+            Download PDF
         </a>
     </div>
 
@@ -106,27 +113,27 @@
              KOLOM KANAN: Rincian Komponen
              ===================================================== --}}
         <div class="lg:col-span-2">
-            <div class="bg-white rounded-xl border border-hairline shadow-sm overflow-hidden">
-                <div class="px-6 py-4 border-b border-divider-soft">
-                    <h2 class="font-semibold text-ink">Rincian Komponen Gaji</h2>
+            <div class="ui-table-wrap">
+                <div class="ui-card-header">
+                    <h2 class="section-title">Rincian Komponen Gaji</h2>
                 </div>
-                <table class="w-full text-sm">
-                    <thead class="bg-canvas-parchment text-ink-muted-48 uppercase text-xs">
+                <table class="ui-table ui-table-compact">
+                    <thead>
                         <tr>
-                            <th class="px-6 py-3 text-left">Komponen</th>
-                            <th class="px-6 py-3 text-left">Tipe</th>
-                            <th class="px-6 py-3 text-right">Nilai</th>
+                            <th>Komponen</th>
+                            <th>Tipe</th>
+                            <th class="!text-right">Nilai</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-divider-soft">
+                    <tbody>
                         {{-- Tampilkan tunjangan dulu --}}
                         @foreach($payslip->components->where('tipe', 'tunjangan') as $comp)
-                            <tr class="hover:bg-canvas-parchment">
-                                <td class="px-6 py-3 text-ink-muted-80">{{ $comp->nama_komponen }}</td>
-                                <td class="px-6 py-3">
-                                    <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Tunjangan</span>
+                            <tr>
+                                <td class="text-ink-muted-80">{{ $comp->nama_komponen }}</td>
+                                <td>
+                                    <span class="badge badge-success">Tunjangan</span>
                                 </td>
-                                <td class="px-6 py-3 text-right text-green-600 font-medium">
+                                <td class="text-right text-emerald-700 font-medium tabular-nums">
                                     + Rp {{ number_format($comp->nilai, 0, ',', '.') }}
                                 </td>
                             </tr>
@@ -134,12 +141,12 @@
 
                         {{-- Lalu tampilkan potongan --}}
                         @foreach($payslip->components->where('tipe', 'potongan') as $comp)
-                            <tr class="hover:bg-canvas-parchment">
-                                <td class="px-6 py-3 text-ink-muted-80">{{ $comp->nama_komponen }}</td>
-                                <td class="px-6 py-3">
-                                    <span class="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full">Potongan</span>
+                            <tr>
+                                <td class="text-ink-muted-80">{{ $comp->nama_komponen }}</td>
+                                <td>
+                                    <span class="badge badge-danger">Potongan</span>
                                 </td>
-                                <td class="px-6 py-3 text-right text-red-500 font-medium">
+                                <td class="text-right text-red-500 font-medium tabular-nums">
                                     - Rp {{ number_format($comp->nilai, 0, ',', '.') }}
                                 </td>
                             </tr>
@@ -147,7 +154,7 @@
 
                         @if($payslip->components->isEmpty())
                             <tr>
-                                <td colspan="3" class="px-6 py-8 text-center text-ink-muted-48 text-sm">
+                                <td colspan="3" class="empty-cell">
                                     Tidak ada rincian komponen.
                                 </td>
                             </tr>

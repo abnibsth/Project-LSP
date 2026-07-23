@@ -65,7 +65,11 @@ class PayslipController extends Controller
         $payslip->load(['employee', 'payrollPeriod', 'components']);
 
         $pdf = Pdf::loadView('payslips.pdf', compact('payslip'))
-            ->setPaper('a4', 'portrait');
+            ->setPaper('a4', 'portrait')
+            ->setOption('dpi', 96)
+            ->setOption('defaultFont', 'DejaVu Sans')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isRemoteEnabled', false);
 
         $namaFile = 'slip-gaji-'.$payslip->payrollPeriod->label.'.pdf';
         $namaFile = str_replace(' ', '-', strtolower($namaFile));

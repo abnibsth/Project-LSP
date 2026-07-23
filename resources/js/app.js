@@ -18,6 +18,25 @@ function createProgressBar() {
     return bar;
 }
 
+function finishProgress() {
+    const bar = createProgressBar();
+    window.clearTimeout(startProgress._t1);
+    window.clearTimeout(startProgress._t2);
+    window.clearTimeout(startProgress._t3);
+    window.clearTimeout(startProgress._safety);
+    bar.classList.add('is-active', 'is-done');
+    bar.style.width = '100%';
+    window.setTimeout(() => {
+        bar.classList.remove('is-active', 'is-done');
+        bar.style.width = '0';
+        // Pastikan cursor progress hilang kalau sempat nempel
+        document.body.classList.remove('is-page-leaving');
+        document.querySelectorAll('.sidebar-nav-link.is-navigating').forEach((el) => {
+            el.classList.remove('is-navigating');
+        });
+    }, 420);
+}
+
 function startProgress() {
     const bar = createProgressBar();
     bar.classList.remove('is-done');
@@ -27,6 +46,7 @@ function startProgress() {
     window.clearTimeout(startProgress._t1);
     window.clearTimeout(startProgress._t2);
     window.clearTimeout(startProgress._t3);
+    window.clearTimeout(startProgress._safety);
 
     startProgress._t1 = window.setTimeout(() => {
         bar.style.width = '42%';
@@ -37,19 +57,36 @@ function startProgress() {
     startProgress._t3 = window.setTimeout(() => {
         bar.style.width = '82%';
     }, 900);
+
+    // Safety: kalau navigasi/download tidak unload halaman, matikan progress
+    // biar cursor tidak muter terus.
+    startProgress._safety = window.setTimeout(() => {
+        finishProgress();
+    }, 8000);
 }
 
-function finishProgress() {
-    const bar = createProgressBar();
-    window.clearTimeout(startProgress._t1);
-    window.clearTimeout(startProgress._t2);
-    window.clearTimeout(startProgress._t3);
-    bar.classList.add('is-active', 'is-done');
-    bar.style.width = '100%';
-    window.setTimeout(() => {
-        bar.classList.remove('is-active', 'is-done');
-        bar.style.width = '0';
-    }, 420);
+function isFileDownloadLink(anchor) {
+    // Link unduh file (PDF, dll) tidak pindah halaman → jangan mulai progress bar.
+    // Kalau tetap dianggap navigasi, cursor/loading stuck sampai user pindah tab.
+    if (!anchor || anchor.tagName !== 'A') {
+        return false;
+    }
+
+    if (anchor.hasAttribute('download') || anchor.dataset.download === 'true') {
+        return true;
+    }
+
+    if (anchor.classList.contains('js-file-download')) {
+        return true;
+    }
+
+    const href = anchor.getAttribute('href') || '';
+    // Route download slip: .../download atau .../download/...
+    if (/\/download(?:\/|$|\?)/i.test(href)) {
+        return true;
+    }
+
+    return false;
 }
 
 function isInternalNavigationLink(anchor) {
@@ -61,7 +98,8 @@ function isInternalNavigationLink(anchor) {
         return false;
     }
 
-    if (anchor.hasAttribute('download')) {
+    // PDF / file download: stay on page → jangan animasi navigasi
+    if (isFileDownloadLink(anchor)) {
         return false;
     }
 
