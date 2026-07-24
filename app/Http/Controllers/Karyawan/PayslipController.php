@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Karyawan;
 
 use App\Http\Controllers\Controller;
-use App\Models\Payslip;
+use App\Models\Slipgaji;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +26,7 @@ class PayslipController extends Controller
     {
         $employee = Auth::user()->employee;
 
-        $payslips = Payslip::where('employee_id', $employee->id)
+        $payslips = Slipgaji::where('employee_id', $employee->id)
             ->whereHas('payrollPeriod', fn ($q) => $q->where('status', 'final'))
             ->with('payrollPeriod')
             ->orderByDesc('created_at')
@@ -40,7 +40,7 @@ class PayslipController extends Controller
      *
      * Verifikasi: pastikan slip ini memang milik karyawan yang login.
      */
-    public function show(Payslip $payslip): View
+    public function show(Slipgaji $payslip): View
     {
         $employee = Auth::user()->employee;
 
@@ -55,7 +55,7 @@ class PayslipController extends Controller
     /**
      * Download slip gaji sebagai PDF.
      */
-    public function download(Payslip $payslip): Response
+    public function download(Slipgaji $payslip): Response
     {
         $employee = Auth::user()->employee;
 

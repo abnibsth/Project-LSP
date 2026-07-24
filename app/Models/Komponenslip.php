@@ -26,7 +26,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'tipe',
     'nilai',
 ])]
-class PayslipComponent extends Model
+class Komponenslip extends Model
 {
     use HasFactory;
 
@@ -37,7 +37,7 @@ class PayslipComponent extends Model
      */
     public function payslip(): BelongsTo
     {
-        return $this->belongsTo(Payslip::class);
+        return $this->belongsTo(Slipgaji::class, 'payslip_id');
     }
 
     /**

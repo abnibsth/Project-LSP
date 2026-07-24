@@ -44,7 +44,7 @@ class Absensi extends Model
      */
     public function employee(): BelongsTo
     {
-        return $this->belongsTo(Employee::class);
+        return $this->belongsTo(Karyawan::class, 'employee_id');
     }
 
     /**
@@ -79,7 +79,7 @@ class Absensi extends Model
      * @param  AttendanceRule  $rule  Aturan absensi yang berlaku
      * @return float Total potongan dalam rupiah
      */
-    public function hitungPotongan(AttendanceRule $rule): float
+    public function hitungPotongan(Aturanabsen $rule): float
     {
         if ($this->status === 'alpha') {
             return (float) $rule->potongan_per_alpha;

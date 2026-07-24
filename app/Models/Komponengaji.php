@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Model;
     'is_aktif',
     'keterangan',
 ])]
-class SalaryComponent extends Model
+class Komponengaji extends Model
 {
     use HasFactory;
 

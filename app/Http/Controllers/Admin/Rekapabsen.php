@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Absensi;
-use App\Models\AttendanceRule;
-use App\Models\Employee;
+use App\Models\Aturanabsen;
+use App\Models\Karyawan;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -46,7 +46,7 @@ class Rekapabsen extends Controller
         $attendances = $query->orderBy('tanggal', 'desc')->paginate(20)->withQueryString();
 
         // Data untuk dropdown filter
-        $employees = Employee::aktif()->orderBy('nama')->get();
+        $employees = Karyawan::aktif()->orderBy('nama')->get();
 
         return view('admin.rekap-absen.index', compact(
             'attendances', 'employees', 'tanggalMulai', 'tanggalSelesai',
@@ -80,7 +80,7 @@ class Rekapabsen extends Controller
         // Hitung ulang menit terlambat jika ada waktu check-in
         $menitTerlambat = 0;
         if ($validated['status'] === 'telat' && $validated['waktu_checkin']) {
-            $rule = AttendanceRule::berlaku();
+            $rule = Aturanabsen::berlaku();
             $jamMasuk = Carbon::parse($attendance->tanggal->format('Y-m-d').' '.$rule->jam_masuk);
             $waktuCheckin = Carbon::parse($attendance->tanggal->format('Y-m-d').' '.$validated['waktu_checkin']);
             $menitTerlambat = max(0, $jamMasuk->diffInMinutes($waktuCheckin, false));

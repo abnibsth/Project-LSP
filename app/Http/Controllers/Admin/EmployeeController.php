@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Employee;
+use App\Models\Karyawan;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,7 +30,7 @@ class EmployeeController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = Employee::with('user');
+        $query = Karyawan::with('user');
 
         // Filter pencarian (nama atau NIK)
         if ($request->filled('cari')) {
@@ -53,7 +53,7 @@ class EmployeeController extends Controller
         $employees = $query->orderBy('nama')->paginate(15)->withQueryString();
 
         // Daftar departemen unik untuk dropdown filter
-        $departemen = Employee::distinct()->pluck('departemen')->sort()->values();
+        $departemen = Karyawan::distinct()->pluck('departemen')->sort()->values();
 
         return view('admin.karyawan.index', compact('employees', 'departemen'));
     }
@@ -68,7 +68,7 @@ class EmployeeController extends Controller
 
     /**
      * Simpan data karyawan baru ke database.
-     * Juga otomatis buat akun login (User) untuk karyawan tersebut.
+     * Otomatis membuatkan akun user dengan role 'karyawan' dan password default 'password'.
      */
     public function store(Request $request): RedirectResponse
     {
@@ -89,19 +89,19 @@ class EmployeeController extends Controller
             'nik.digits' => 'NIK harus berupa 16 digit angka KTP.',
             'nik.regex' => 'NIK harus diawali dengan angka 317 (DKI Jakarta).',
             'nik.unique' => 'NIK sudah terdaftar.',
-            'email.unique' => 'Email sudah digunakan.',
+            'email.unique' => 'Alamat email sudah digunakan.',
         ]);
 
-        // Buat akun login untuk karyawan ini
+        // Buat akun user untuk login karyawan
         $user = User::create([
             'name' => $validated['nama'],
             'email' => $validated['email'],
-            'password' => Hash::make('password'), // Password default, karyawan bisa ganti nanti
+            'password' => Hash::make('password'),
             'role' => 'karyawan',
         ]);
 
         // Buat data employee dan hubungkan ke user
-        Employee::create([
+        Karyawan::create([
             ...$validated,
             'user_id' => $user->id,
         ]);
@@ -113,7 +113,7 @@ class EmployeeController extends Controller
     /**
      * Tampilkan detail lengkap satu karyawan.
      */
-    public function show(Employee $employee): View
+    public function show(Karyawan $employee): View
     {
         $employee->load(['user', 'attendances' => fn ($q) => $q->latest()->limit(10), 'payslips.payrollPeriod']);
 
@@ -123,7 +123,7 @@ class EmployeeController extends Controller
     /**
      * Tampilkan form edit data karyawan.
      */
-    public function edit(Employee $employee): View
+    public function edit(Karyawan $employee): View
     {
         return view('admin.karyawan.edit', compact('employee'));
     }
@@ -131,7 +131,7 @@ class EmployeeController extends Controller
     /**
      * Simpan perubahan data karyawan.
      */
-    public function update(Request $request, Employee $employee): RedirectResponse
+    public function update(Request $request, Karyawan $employee): RedirectResponse
     {
         $validated = $request->validate([
             'nik' => ['required', 'numeric', 'digits:16', 'regex:/^317/', 'unique:karyawan,nik,'.$employee->id],
@@ -166,7 +166,7 @@ class EmployeeController extends Controller
      * Nonaktifkan karyawan (bukan hapus permanen).
      * Karyawan yang nonaktif tidak akan diproses di payroll berikutnya.
      */
-    public function nonaktifkan(Employee $employee): RedirectResponse
+    public function nonaktifkan(Karyawan $employee): RedirectResponse
     {
         $employee->update(['is_aktif' => false]);
 
@@ -178,7 +178,7 @@ class EmployeeController extends Controller
      * Hapus data karyawan (admin.karyawan.destroy via resource route).
      * Mengaktifkan kembali jika sebelumnya nonaktif, atau hapus jika diperlukan.
      */
-    public function destroy(Employee $employee): RedirectResponse
+    public function destroy(Karyawan $employee): RedirectResponse
     {
         $namaKaryawan = $employee->nama;
 

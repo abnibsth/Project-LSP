@@ -31,7 +31,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'tanggal_masuk',
     'is_aktif',
 ])]
-class Employee extends Model
+class Karyawan extends Model
 {
     use HasFactory;
 
@@ -52,7 +52,7 @@ class Employee extends Model
      */
     public function attendances(): HasMany
     {
-        return $this->hasMany(Absensi::class);
+        return $this->hasMany(Absensi::class, 'employee_id');
     }
 
     /**
@@ -60,7 +60,7 @@ class Employee extends Model
      */
     public function payslips(): HasMany
     {
-        return $this->hasMany(Payslip::class);
+        return $this->hasMany(Slipgaji::class, 'employee_id');
     }
 
     /**

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Employee;
-use App\Models\PayrollPeriod;
+use App\Models\Karyawan;
+use App\Models\Periodepayrol;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -27,7 +27,7 @@ class ReportController extends Controller
         $bulan = $request->integer('bulan', now()->month);
         $tahun = $request->integer('tahun', now()->year);
 
-        $periode = PayrollPeriod::where('bulan', $bulan)
+        $periode = Periodepayrol::where('bulan', $bulan)
             ->where('tahun', $tahun)
             ->with(['payslips.employee'])
             ->first();
@@ -51,7 +51,7 @@ class ReportController extends Controller
         $bulan = $request->integer('bulan', now()->month);
         $tahun = $request->integer('tahun', now()->year);
 
-        $employees = Employee::aktif()
+        $employees = Karyawan::aktif()
             ->withCount([
                 'attendances as total_hadir' => fn ($q) => $q->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->where('status', 'hadir'),
                 'attendances as total_telat' => fn ($q) => $q->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->where('status', 'telat'),

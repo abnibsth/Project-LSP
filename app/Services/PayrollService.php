@@ -3,12 +3,12 @@
 namespace App\Services;
 
 use App\Models\Absensi;
-use App\Models\AttendanceRule;
-use App\Models\Employee;
-use App\Models\PayrollPeriod;
-use App\Models\Payslip;
-use App\Models\PayslipComponent;
-use App\Models\SalaryComponent;
+use App\Models\Aturanabsen;
+use App\Models\Karyawan;
+use App\Models\Komponengaji;
+use App\Models\Komponenslip;
+use App\Models\Periodepayrol;
+use App\Models\Slipgaji;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
@@ -31,16 +31,16 @@ class PayrollService
      * Langkah-langkah:
      * 1. Ambil semua karyawan aktif
      * 2. Untuk setiap karyawan: hitung gajinya menggunakan hitungGajiKaryawan()
-     * 3. Simpan hasil ke tabel payslips & payslip_components
+     * 3. Simpan hasil ke tabel gaji & komponen_gaji
      *
-     * @param  PayrollPeriod  $periode  Periode payroll yang akan diproses
+     * @param  Periodepayrol  $periode  Periode payroll yang akan diproses
      * @return array{berhasil: int, gagal: int} Ringkasan hasil proses
      */
-    public function prosesPayroll(PayrollPeriod $periode): array
+    public function prosesPayroll(Periodepayrol $periode): array
     {
-        $karyawanAktif = Employee::aktif()->with('attendances')->get();
-        $rule = AttendanceRule::berlaku();
-        $komponenAktif = SalaryComponent::aktif()->get();
+        $karyawanAktif = Karyawan::aktif()->with('attendances')->get();
+        $rule = Aturanabsen::berlaku();
+        $komponenAktif = Komponengaji::aktif()->get();
 
         $berhasil = 0;
         $gagal = 0;
@@ -63,17 +63,17 @@ class PayrollService
      * Jika sudah ada slip gaji untuk periode ini, data akan di-overwrite
      * (kecuali potongan pajak yang sudah diinput HRD — itu tetap dipertahankan).
      *
-     * @param  Employee  $karyawan  Data karyawan
-     * @param  PayrollPeriod  $periode  Periode payroll
-     * @param  AttendanceRule  $rule  Aturan absensi yang berlaku
+     * @param  Karyawan  $karyawan  Data karyawan
+     * @param  Periodepayrol  $periode  Periode payroll
+     * @param  Aturanabsen  $rule  Aturan absensi yang berlaku
      * @param  Collection  $komponenAktif  Daftar komponen gaji aktif
      */
     public function hitungGajiKaryawan(
-        Employee $karyawan,
-        PayrollPeriod $periode,
-        AttendanceRule $rule,
+        Karyawan $karyawan,
+        Periodepayrol $periode,
+        Aturanabsen $rule,
         $komponenAktif
-    ): Payslip {
+    ): Slipgaji {
         $gajiPokok = (float) $karyawan->gaji_pokok;
 
         // =========================================================
@@ -143,7 +143,7 @@ class PayrollService
         // =========================================================
         // LANGKAH 5: Pertahankan potongan pajak yang sudah diinput HRD
         // =========================================================
-        $slipLama = Payslip::where('employee_id', $karyawan->id)
+        $slipLama = Slipgaji::where('employee_id', $karyawan->id)
             ->where('payroll_period_id', $periode->id)
             ->first();
 
@@ -159,7 +159,7 @@ class PayrollService
         // =========================================================
         // LANGKAH 7: Simpan/Update Slip Gaji di database
         // =========================================================
-        $payslip = Payslip::updateOrCreate(
+        $payslip = Slipgaji::updateOrCreate(
             [
                 'employee_id' => $karyawan->id,
                 'payroll_period_id' => $periode->id,
@@ -191,17 +191,17 @@ class PayrollService
 
         // Simpan rincian tunjangan
         foreach ($rincianTunjangan as $rincian) {
-            PayslipComponent::create(array_merge(['payslip_id' => $payslip->id], $rincian));
+            Komponenslip::create(array_merge(['payslip_id' => $payslip->id], $rincian));
         }
 
         // Simpan rincian potongan lain
         foreach ($rincianPotonganLain as $rincian) {
-            PayslipComponent::create(array_merge(['payslip_id' => $payslip->id], $rincian));
+            Komponenslip::create(array_merge(['payslip_id' => $payslip->id], $rincian));
         }
 
         // Simpan potongan absensi sebagai komponen jika ada
         if ($potonganAbsensi > 0) {
-            PayslipComponent::create([
+            Komponenslip::create([
                 'payslip_id' => $payslip->id,
                 'nama_komponen' => 'Potongan Kehadiran (Alpha: '.$totalAlpha.' hari, Telat: '.$totalMenitTelat.' menit)',
                 'tipe' => 'potongan',
@@ -211,7 +211,7 @@ class PayrollService
 
         // Simpan potongan pajak jika ada
         if ($potonganPajak > 0) {
-            PayslipComponent::create([
+            Komponenslip::create([
                 'payslip_id' => $payslip->id,
                 'nama_komponen' => 'Potongan Pajak (PPh 21)',
                 'tipe' => 'potongan',

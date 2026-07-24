@@ -34,7 +34,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'detail_json',
     'file_pdf',
 ])]
-class Payslip extends Model
+class Slipgaji extends Model
 {
     use HasFactory;
 
@@ -45,7 +45,7 @@ class Payslip extends Model
      */
     public function employee(): BelongsTo
     {
-        return $this->belongsTo(Employee::class);
+        return $this->belongsTo(Karyawan::class, 'employee_id');
     }
 
     /**
@@ -53,7 +53,7 @@ class Payslip extends Model
      */
     public function payrollPeriod(): BelongsTo
     {
-        return $this->belongsTo(PayrollPeriod::class);
+        return $this->belongsTo(Periodepayrol::class, 'payroll_period_id');
     }
 
     /**
@@ -61,7 +61,7 @@ class Payslip extends Model
      */
     public function components(): HasMany
     {
-        return $this->hasMany(PayslipComponent::class);
+        return $this->hasMany(Komponenslip::class, 'payslip_id');
     }
 
     /**

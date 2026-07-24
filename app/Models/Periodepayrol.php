@@ -26,7 +26,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'tanggal_finalisasi',
     'finalized_by',
 ])]
-class PayrollPeriod extends Model
+class Periodepayrol extends Model
 {
     use HasFactory;
 
@@ -37,7 +37,7 @@ class PayrollPeriod extends Model
      */
     public function payslips(): HasMany
     {
-        return $this->hasMany(Payslip::class);
+        return $this->hasMany(Slipgaji::class, 'payroll_period_id');
     }
 
     /**

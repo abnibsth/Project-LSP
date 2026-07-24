@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Karyawan;
 
 use App\Http\Controllers\Controller;
 use App\Models\Absensi;
-use App\Models\AttendanceRule;
+use App\Models\Aturanabsen;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -48,7 +48,7 @@ class AbsensiController extends Controller
             ->orderBy('tanggal', 'desc')
             ->get();
 
-        $rule = AttendanceRule::berlaku();
+        $rule = Aturanabsen::berlaku();
 
         return view('karyawan.absesni', compact('absensiHariIni', 'rekapAbsensi', 'rule', 'bulan', 'tahun'));
     }
@@ -79,7 +79,7 @@ class AbsensiController extends Controller
             return back()->with('error', 'Anda sudah melakukan check-in hari ini.');
         }
 
-        $rule = AttendanceRule::berlaku();
+        $rule = Aturanabsen::berlaku();
         $sekarang = Carbon::now();
 
         // Hitung menit terlambat

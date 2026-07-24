@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Absensi;
-use App\Models\Employee;
-use App\Models\PayrollPeriod;
+use App\Models\Karyawan;
+use App\Models\Periodepayrol;
 use Illuminate\View\View;
 
 /**
@@ -33,7 +33,7 @@ class DashboardController extends Controller
         $today = now()->toDateString();
 
         // Hitung statistik untuk card ringkasan
-        $totalKaryawan = Employee::aktif()->count();
+        $totalKaryawan = Karyawan::aktif()->count();
 
         $hadirHariIni = Absensi::whereDate('tanggal', $today)
             ->whereIn('status', ['hadir', 'telat'])
@@ -43,12 +43,12 @@ class DashboardController extends Controller
         $alphaHariIni = max(0, $alphaHariIni); // Jangan sampai negatif
 
         // Ambil periode payroll paling baru
-        $periodeAktif = PayrollPeriod::orderByDesc('tahun')
+        $periodeAktif = Periodepayrol::orderByDesc('tahun')
             ->orderByDesc('bulan')
             ->first();
 
         // Ambil data pengeluaran gaji 6 bulan terakhir dari periode yang sudah FINAL
-        $payrollPeriods = PayrollPeriod::with('payslips')
+        $payrollPeriods = Periodepayrol::with('payslips')
             ->where('status', 'final')
             ->orderBy('tahun', 'desc')
             ->orderBy('bulan', 'desc')

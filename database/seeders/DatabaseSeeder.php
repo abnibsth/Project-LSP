@@ -3,9 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Absensi;
-use App\Models\AttendanceRule;
-use App\Models\Employee;
-use App\Models\SalaryComponent;
+use App\Models\Aturanabsen;
+use App\Models\Karyawan;
+use App\Models\Komponengaji;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
@@ -160,7 +160,7 @@ class DatabaseSeeder extends Seeder
                 $data['user']
             );
 
-            Employee::updateOrCreate(
+            Karyawan::updateOrCreate(
                 ['nik' => $data['employee']['nik']],
                 array_merge($data['employee'], ['user_id' => $user->id])
             );
@@ -215,20 +215,20 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($komponenGaji as $komponen) {
-            SalaryComponent::updateOrCreate(
+            Komponengaji::updateOrCreate(
                 ['nama_komponen' => $komponen['nama_komponen']],
                 $komponen
             );
         }
 
         // Nonaktifkan potongan kasbon lama jika masih ada di database
-        SalaryComponent::where('nama_komponen', 'Kasbon / Pinjaman')
+        Komponengaji::where('nama_komponen', 'Kasbon / Pinjaman')
             ->update(['is_aktif' => false]);
 
         // =============================================
         // 4. BUAT ATURAN ABSENSI DEFAULT
         // =============================================
-        AttendanceRule::firstOrCreate(
+        Aturanabsen::firstOrCreate(
             [
                 'jam_masuk' => '07:30:00',
                 'jam_keluar' => '17:00:00',
@@ -252,7 +252,7 @@ class DatabaseSeeder extends Seeder
             6 => 'Juni',
             7 => 'Juli',
         ];
-        $karyawanAktif = Employee::aktif()->get();
+        $karyawanAktif = Karyawan::aktif()->get();
 
         foreach ($bulanAbsensi as $bulan => $namaBulan) {
             $tanggalMulai = Carbon::create(2026, $bulan, 1);

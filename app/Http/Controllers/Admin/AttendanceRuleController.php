@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\AttendanceRule;
+use App\Models\Aturanabsen;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -22,7 +22,7 @@ class AttendanceRuleController extends Controller
      */
     public function edit(): View
     {
-        $rule = AttendanceRule::berlaku();
+        $rule = Aturanabsen::berlaku();
 
         return view('admin.aturan-absensi.edit', compact('rule'));
     }
@@ -42,7 +42,7 @@ class AttendanceRuleController extends Controller
             'toleransi_menit.max' => 'Toleransi maksimal 120 menit.',
         ]);
 
-        $rule = AttendanceRule::berlaku();
+        $rule = Aturanabsen::berlaku();
         $rule->update($validated);
 
         return redirect()->route('admin.aturan-absensi.edit')

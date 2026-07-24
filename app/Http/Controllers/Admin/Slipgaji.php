@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Payslip;
+use App\Models\Slipgaji;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,7 +26,7 @@ class Slipgaji extends Controller
      */
     public function index(Request $request): View
     {
-        $query = Payslip::with(['employee', 'payrollPeriod'])
+        $query = Slipgaji::with(['employee', 'payrollPeriod'])
             ->whereHas('payrollPeriod', fn ($q) => $q->where('status', 'final'));
 
         if ($request->filled('payroll_period_id')) {
@@ -45,7 +45,7 @@ class Slipgaji extends Controller
     /**
      * Detail satu slip gaji karyawan.
      */
-    public function show(Payslip $payslip): View
+    public function show(Slipgaji $payslip): View
     {
         $payslip->load(['employee', 'payrollPeriod', 'components']);
 
@@ -55,7 +55,7 @@ class Slipgaji extends Controller
     /**
      * Download slip gaji sebagai file PDF.
      */
-    public function download(Payslip $payslip): Response
+    public function download(Slipgaji $payslip): Response
     {
         $payslip->load(['employee', 'payrollPeriod', 'components']);
 
@@ -81,7 +81,7 @@ class Slipgaji extends Controller
      *
      * Setelah update, sistem recalculate total_potongan & gaji_bersih.
      */
-    public function updatePotonganPajak(Request $request, Payslip $payslip): RedirectResponse
+    public function updatePotonganPajak(Request $request, Slipgaji $payslip): RedirectResponse
     {
         // Pastikan periode belum final
         if ($payslip->payrollPeriod->isFinal()) {
@@ -104,6 +104,7 @@ class Slipgaji extends Controller
             'gaji_bersih' => $gajiBersih,
         ]);
 
-        return back()->with('success', 'Potongan pajak berhasil diperbarui. Gaji bersih sudah dihitung ulang.');
+        return redirect()->route('admin.slip-gaji.show', $payslip)
+            ->with('success', 'Potongan pajak berhasil diperbarui.');
     }
 }

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Karyawan;
 
 use App\Http\Controllers\Controller;
 use App\Models\Absensi;
-use App\Models\Payslip;
+use App\Models\Slipgaji;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -53,7 +53,7 @@ class DashboardController extends Controller
 
             // Query dasar slip FINAL saja.
             // Karyawan tidak boleh lihat slip draft (belum difinalisasi admin).
-            $slipFinalQuery = Payslip::query()
+            $slipFinalQuery = Slipgaji::query()
                 ->where('employee_id', $employee->id)
                 ->whereHas('payrollPeriod', fn ($q) => $q->where('status', 'final'));
 
@@ -73,7 +73,7 @@ class DashboardController extends Controller
             $rataRataGajiBersih = (float) (clone $slipFinalQuery)->avg('gaji_bersih');
 
             // YTD = Year To Date → total gaji bersih di tahun berjalan
-            $totalGajiYtd = (float) Payslip::query()
+            $totalGajiYtd = (float) Slipgaji::query()
                 ->where('employee_id', $employee->id)
                 ->whereHas('payrollPeriod', function ($q) {
                     $q->where('status', 'final')

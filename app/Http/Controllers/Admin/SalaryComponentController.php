@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\SalaryComponent;
+use App\Models\Komponengaji;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -22,8 +22,8 @@ class SalaryComponentController extends Controller
 {
     public function index(): View
     {
-        $tunjangan = SalaryComponent::where('tipe', 'tunjangan')->orderBy('nama_komponen')->get();
-        $potongan = SalaryComponent::where('tipe', 'potongan')->orderBy('nama_komponen')->get();
+        $tunjangan = Komponengaji::where('tipe', 'tunjangan')->orderBy('nama_komponen')->get();
+        $potongan = Komponengaji::where('tipe', 'potongan')->orderBy('nama_komponen')->get();
 
         return view('admin.komponen-gaji.index', compact('tunjangan', 'potongan'));
     }
@@ -43,18 +43,18 @@ class SalaryComponentController extends Controller
             'keterangan' => ['nullable', 'string'],
         ]);
 
-        SalaryComponent::create($validated);
+        Komponengaji::create($validated);
 
         return redirect()->route('admin.komponen-gaji.index')
             ->with('success', 'Komponen gaji berhasil ditambahkan.');
     }
 
-    public function edit(SalaryComponent $salaryComponent): View
+    public function edit(Komponengaji $salaryComponent): View
     {
         return view('admin.komponen-gaji.edit', compact('salaryComponent'));
     }
 
-    public function update(Request $request, SalaryComponent $salaryComponent): RedirectResponse
+    public function update(Request $request, Komponengaji $salaryComponent): RedirectResponse
     {
         $validated = $request->validate([
             'nama_komponen' => ['required', 'string', 'max:100'],
@@ -71,7 +71,7 @@ class SalaryComponentController extends Controller
             ->with('success', 'Komponen gaji berhasil diperbarui.');
     }
 
-    public function destroy(SalaryComponent $salaryComponent): RedirectResponse
+    public function destroy(Komponengaji $salaryComponent): RedirectResponse
     {
         // Menyimpan nama komponen untuk ditampilkan di flash message
         $nama = $salaryComponent->nama_komponen;

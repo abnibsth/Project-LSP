@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\PayrollPeriod;
+use App\Models\Periodepayrol;
 use App\Services\PayrollService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -31,7 +31,7 @@ class PayrollController extends Controller
      */
     public function index(): View
     {
-        $periodes = PayrollPeriod::with(['payslips', 'finalizedBy'])
+        $periodes = Periodepayrol::with(['payslips', 'finalizedBy'])
             ->orderByDesc('tahun')
             ->orderByDesc('bulan')
             ->paginate(12);
@@ -58,7 +58,7 @@ class PayrollController extends Controller
         ]);
 
         // Cek apakah periode ini sudah ada
-        $existing = PayrollPeriod::where('bulan', $validated['bulan'])
+        $existing = Periodepayrol::where('bulan', $validated['bulan'])
             ->where('tahun', $validated['tahun'])
             ->first();
 
@@ -66,7 +66,7 @@ class PayrollController extends Controller
             return back()->withErrors(['bulan' => 'Periode payroll untuk bulan & tahun tersebut sudah ada.']);
         }
 
-        $periode = PayrollPeriod::create($validated);
+        $periode = Periodepayrol::create($validated);
 
         return redirect()->route('admin.payroll.show', $periode)
             ->with('success', 'Periode payroll berhasil dibuat. Klik "Proses Payroll" untuk mulai hitung gaji.');
@@ -75,7 +75,7 @@ class PayrollController extends Controller
     /**
      * Tampilkan detail periode payroll beserta daftar slip gaji karyawan.
      */
-    public function show(PayrollPeriod $payrollPeriod): View
+    public function show(Periodepayrol $payrollPeriod): View
     {
         $payrollPeriod->load(['payslips.employee', 'payslips.components']);
 
@@ -86,7 +86,7 @@ class PayrollController extends Controller
      * Jalankan proses hitung gaji (payroll run).
      * Hanya bisa dilakukan jika status masih 'draft'.
      */
-    public function proses(PayrollPeriod $payrollPeriod): RedirectResponse
+    public function proses(Periodepayrol $payrollPeriod): RedirectResponse
     {
         if ($payrollPeriod->isFinal()) {
             return back()->with('error', 'Periode payroll ini sudah final dan tidak bisa diproses ulang.');
@@ -102,7 +102,7 @@ class PayrollController extends Controller
      * Finalisasi periode payroll — kunci data agar tidak bisa diubah.
      * Setelah finalisasi, slip gaji bisa dilihat oleh karyawan.
      */
-    public function finalisasi(PayrollPeriod $payrollPeriod): RedirectResponse
+    public function finalisasi(Periodepayrol $payrollPeriod): RedirectResponse
     {
         if ($payrollPeriod->isFinal()) {
             return back()->with('error', 'Periode ini sudah final.');

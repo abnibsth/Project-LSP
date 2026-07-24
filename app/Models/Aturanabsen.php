@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Model;
     'potongan_per_alpha',
     'potongan_per_menit_telat',
 ])]
-class AttendanceRule extends Model
+class Aturanabsen extends Model
 {
     use HasFactory;
 
